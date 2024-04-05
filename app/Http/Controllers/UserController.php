@@ -72,8 +72,12 @@ class UserController extends Controller
 
             $data = $request->input();
             if(Auth::attempt((['email' => $data['email'], 'password' => $data['password']]))){
-
-                return $this->returnData(Auth::user(),'User Logged In Successfully');
+                $user = Auth::user();
+                $user->token = $user->createToken("API TOKEN")->plainTextToken;
+                $data= [
+                    'user' => $user
+                ];
+                return $this->returnData($data,'User Logged In Successfully');
             }
             else
                 return $this->returnError('Email & Password does not match with our record.');
@@ -83,6 +87,8 @@ class UserController extends Controller
             return $this->returnError($th->getMessage(),500);
 
         }
-        }
+        
+    }
+
 
 }
