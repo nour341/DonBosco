@@ -1,21 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\User;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
-{
-     /**
-     * Create User
-     * @param Request $request
-     * @return User
-     */
+{    use GeneralTrait;
+
     public function createUser(Request $request)
     {
         try {
@@ -55,19 +50,17 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Login The User
-     * @param Request $request
-     * @return User
-     */
-    public function loginUser(Request $request)
+
+
+    public function login(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
+
             $validateUser = Validator::make($request->all(),
-            [
-                'email' => 'required|email',
-                'password' => 'required'
-            ]);
+                [
+                    'email' => 'required|email',
+                    'password' => 'required'
+                ]);
 
             if($validateUser->fails()){
                 return response()->json([
@@ -77,36 +70,19 @@ class UserController extends Controller
                 ], 401);
             }
 
-            if(!Auth::attempt($request->only(['email', 'password']))){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Email & Password does not match with our record.',
-                ], 401);
-            }
+            $data = $request->input();
+            if(Auth::attempt((['email' => $data['email'], 'password' => $data['password']]))){
 
-            $user = User::where('email', $request->email)->first();
-            $user = User::find(Auth::user()->id);
-            $name = $user->name;
-            $email = $user->email;
-            $password = $user->password;
-            $gender = $user->gender;
-            $rolenumber = $user->rolenumber;
-            return response()->json([
-                'status' => true,
-                'message' => 'User Logged In Successfully',
-                'token' => $user->createToken("API TOKEN")->plainTextToken,
-                'name' => $name,
-                'email' => $email,
-                'password' => $password,
-                'gender' => $gender,
-                'rolenumber' => $rolenumber,
-            ], 200);
+                return $this->returnData(Auth::user(),'User Logged In Successfully');
+            }
+            else
+                return $this->returnError('Email & Password does not match with our record.');
+
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
+            return $this->returnError($th->getMessage(),500);
+
         }
-    }
+        }
+
 }

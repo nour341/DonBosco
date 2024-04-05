@@ -8,8 +8,13 @@ use App\Models\Country;
 use App\Models\Project;
 class Center extends Model
 {
+    use HasFactory;
     protected $table = 'centers';
-    protected $fillable = ['name','address','image_path','country_id'];
+    protected $fillable = [
+        'name',
+        'address',
+        'image_path',
+        'country_id'];
 
     public function country()
        {
@@ -19,5 +24,9 @@ class Center extends Model
        {
            return $this->hasMany(Project::class);
        }
-    use HasFactory;
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

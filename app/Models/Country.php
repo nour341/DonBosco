@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Center;
 class Country extends Model
 {
-    protected $table = 'countries';
+    use HasFactory;
+//    protected $table = 'countries';
     protected $fillable = ['name'];
 
     public function centers()
@@ -15,5 +16,10 @@ class Country extends Model
            return $this->hasMany(Center::class);
        }
 
-    use HasFactory;
+
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

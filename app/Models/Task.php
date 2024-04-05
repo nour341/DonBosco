@@ -8,6 +8,8 @@ use App\Models\Project;
 
 class Task extends Model
 {
+    use HasFactory;
+
     protected $table = 'tasks';
     protected $fillable = ['project_id','description','start_date','end_date','status'];
 
@@ -16,5 +18,22 @@ class Task extends Model
            return $this->belongsTo(Project::class);
        }
 
-    use HasFactory;
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'task_id', 'id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class, 'task_id', 'id');
+    }
+
+    public function comment()
+    {
+        return $this->hasMany(Comment::class, 'task_id', 'id');
+    }
+
+
+
 }

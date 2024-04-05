@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_number',
+        'gender',
     ];
 
     /**
@@ -36,6 +38,7 @@ class User extends Authenticatable
        {
            return $this->belongsToMany(Project::class);
        }
+
 
     /**
      * The attributes that should be cast.

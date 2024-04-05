@@ -21,7 +21,6 @@ return new class extends Migration
            $table->date('end_date');
            $table->string('status');
            $table->timestamps();
-
            // تعريف العمود project_id كمفتاح خارجي
            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });

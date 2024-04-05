@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Task;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Center;
 use App\Models\User;
-use App\Models\Task;
 class Project extends Model
 {
+    use HasFactory;
     protected $table = 'projects';
     protected $fillable = ['name','description','start_date','end_date','center_id'];
     public function center()
@@ -23,6 +24,17 @@ class Project extends Model
        {
            return $this->hasMany(Task::class);
        }
+       public function folders()
+        {
+            return $this->hasMany(Folder::class);
+        }
 
-    use HasFactory;
+
+        public function budget()
+        {
+            return $this->hasOne(Budget::class);
+        }
+
+
+
 }
