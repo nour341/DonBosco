@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\ProvincialCoordinator;
 
+use App\Helper\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateProjectRequest;
 use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
@@ -10,25 +12,8 @@ use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
-    public function CreateProject(Request $request)
+    public function CreateProject(CreateProjectRequest $request)
     {
-        //Validated
-        $validate = Validator::make($request->all(),
-            [
-                'name' => 'required:projects',
-                'description'=> 'required:projects',
-                'start_date'=> 'required:projects',
-                'end_date'=> 'required:projects',
-                'center_id'=> 'required:projects',
-            ]);
-
-        if($validate->fails()){
-            return response()->json([
-                'status' => false,
-                'message' => 'validation error',
-                'errors' => $validate->errors()
-            ], 401);
-        }
         try {
             $project = Project::create([
                 'name' => $request->name,
@@ -37,26 +22,24 @@ class ProjectController extends Controller
                 'end_date'=>   $request->end_date,
                 'center_id'=>  $request->center_id,
             ]);
-
-            return $this->returnSuccess("Project Created Successfully");
+return ResponseHelper::success('project created successfully');
 
         } catch (\Throwable $th) {
-            return $this->returnError('Failed to create the Project. Try again after some time');
+            return ResponseHelper::error('Error');
+
         }
     }
 
     public function getProjects(){
 
         try {
-            $projects=Project::with('projects')->get();
-            $projects = [
-                'projects' => $projects
-            ];
-            return $this->returnData($projects,'Get the all projects successfully');
+            $projects=Project::query()->get()->toArray();
 
+return ResponseHelper::success($projects);
         }
         catch (\Throwable $th) {
-                return $this->returnError('Failed Get the  projects. Try again after some time');
+            return ResponseHelper::error('Error');
+
         }
 
     }
@@ -64,16 +47,9 @@ class ProjectController extends Controller
     public function getProject($id){
         $Project=Project::find($id);
         if(!$Project){
-            return $this->returnError('Failed to get Project. the Project does not exist');
+            return ResponseHelper::error('Error');
         }
-        $Project=Project::with('Projects')->find($id);
-
-        $Project = [
-        'Project' => $Project
-        ];
-
-        return $this->returnData($Project,'Get the Project successfully');
-
+        return ResponseHelper::success($Project);
     }
 
     public function getBudget(Request $req)
@@ -81,7 +57,7 @@ class ProjectController extends Controller
         $project=Project::find($req->project_id);
         if ($project) {
 
-            $Budgets = $project->Budgets()->get();
+            $Budgets = $project->budget()->get();
 
             $arr = [
                 'message' => $Budgets,

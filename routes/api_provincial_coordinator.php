@@ -5,6 +5,9 @@ use App\Http\Controllers\ProvincialCoordinator\CountryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\FileSystemController;
+use App\Http\Controllers\ProvincialCoordinator\ProjectController;
+use App\Http\Controllers\ProvincialCoordinator\ReportController;
 use App\Http\Controllers\UserController;
 
 
@@ -34,7 +37,6 @@ Route::get('/getCountry/{id}', [CountryController::class, 'getCountry']);
 Route::get('/getProjectsCountry/{id}', [CountryController::class, 'getProjectsCountry']);
 ############################ END ########################################
 
-
 ############################ Center ########################################
 Route::post('/createCenter', [CenterController::class, 'createCenter']);
 Route::post('/updateCenter', [CenterController::class, 'updateCenter']);
@@ -43,3 +45,18 @@ Route::get('/getCenter/{id}', [CenterController::class, 'getCenter']);
 Route::get('/getProjectsCenter/{id}', [CenterController::class, 'getProjectsCenter']);
 ############################ END ########################################
 
+############################ Folder ########################################
+Route::post('AddFolder', [FileSystemController::class, 'AddFolder']);
+Route::post('ShowFolders', [FileSystemController::class, 'ShowFolders']);
+
+
+############################ Report ########################################
+Route::post('AddReport', [ReportController::class, 'AddReport']);
+Route::post('ShowReports', [ReportController::class, 'ShowReports']);
+
+
+############################ Project ########################################
+Route::post('/CreateProject', [ProjectController::class, 'CreateProject']);
+Route::get('getProjects', [ProjectController::class, 'getProjects']);
+Route::post('getProject/{id}', [ProjectController::class, 'getProject']);
+Route::post('getBudget', [ProjectController::class, 'getBudget']);
