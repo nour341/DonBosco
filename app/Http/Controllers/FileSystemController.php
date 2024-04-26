@@ -2,38 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\ResponseHelper;
+use App\Http\Requests\CreateFolderRequest;
+use App\Models\File;
 use App\Models\Folder;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class FileSystemController extends Controller
 {
-    public function AddFolder(Request $req) {
-        Folder::create([
+    public function AddFolder(CreateFolderRequest $req) {
+
+        try{
+        $folder = Folder::create([
             'project_id'=>$req->project_id,
             'name'=>$req->name,
         ]);
-        $arr=[
-            'message'=>'The folder has been successfully selected for the project',
-            'status'=>200
-        ];
-        return response($arr,200);
-
-    }
-
-
-    public function ShowFolders(){
-
-        try {
-            $folders=Folder::with('projects')->get();
-            $folders = [
-                'folders' => $folders
-            ];
-            return $this->returnData($folders,'Get the all Folders successfully');
+       return ResponseHelper::success('folder created successfully');
 
         }
         catch (\Throwable $th) {
-            return $this->returnError('Failed Get the all Folders. Try again after some time');
+            return ResponseHelper::error($th);
+
         }
 
     }
+
+
+    public function getProjectFolders($id){
+        $folders=Project::where('id',$id)->with('folders')->get()->toArray();
+        if(!$folders){
+           return ResponseHelper::error('Error');
+        }
+        return ResponseHelper::success($folders);
+    }
+
+    public function ShowFolder($id){
+        $folder=Folder::find($id);
+        if(!$folder){
+            return ResponseHelper::error('Error');
+        }
+        return ResponseHelper::success($folder);
+    }
+
+
 }
+
+
+
+

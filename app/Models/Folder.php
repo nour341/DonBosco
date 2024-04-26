@@ -12,7 +12,7 @@ class Folder extends Model
     protected $fillable = [
         'id',
         'project_id',
-        'folder_parent_id',
+       // 'folder_id',
         'name',
     ];
 

@@ -13,7 +13,8 @@ class File extends Model
         'id',
         'folder_id',
         'name',
-        'type',
+        'description'
+        //'type',
     ];
 
     public function folders()

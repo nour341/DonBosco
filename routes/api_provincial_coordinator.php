@@ -47,12 +47,14 @@ Route::get('/getProjectsCenter/{id}', [CenterController::class, 'getProjectsCent
 
 ############################ Folder ########################################
 Route::post('AddFolder', [FileSystemController::class, 'AddFolder']);
-Route::post('ShowFolders', [FileSystemController::class, 'ShowFolders']);
+Route::post('ShowFolder/{id}', [FileSystemController::class, 'ShowFolder']);
+Route::post('getProjectFolders/{id}', [FileSystemController::class, 'getProjectFolders']);
 
 
 ############################ Report ########################################
 Route::post('AddReport', [ReportController::class, 'AddReport']);
 Route::post('ShowReports', [ReportController::class, 'ShowReports']);
+Route::post('getFolderReports', [ReportController::class, 'getFolderReports']);
 
 
 ############################ Project ########################################

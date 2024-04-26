@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateProjectRequest extends FormRequest
+class CreateReportRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +24,8 @@ class CreateProjectRequest extends FormRequest
     public function rules()
     {
         return [
-
-                'name' => 'required:projects',
-                'description'=> 'required:projects',
-                'start_date'=> 'required:projects',
-                'end_date'=> 'required:projects',
-                'center_id'=> 'required:projects',
-                    ];
+            'project_id'=>'required',
+            'folder_id'=>'required',
+        ];
     }
 }
