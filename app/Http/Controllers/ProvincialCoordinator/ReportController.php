@@ -4,14 +4,17 @@ namespace App\Http\Controllers\ProvincialCoordinator;
 
 use App\Http\Controllers\Controller;
 use App\Models\File;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
-{
+{ use GeneralTrait;
     public function AddReport(Request $req) {
+
         File::create([
             'project_id'=>$req->project_id,
             'folder_id'=>$req->folder_id,
+            'folder_parent_id'=>$req->folder_parent_id,
 
         ]);
         $arr=[

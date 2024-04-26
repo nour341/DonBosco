@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use PhpParser\Node\NullableType;
 
 class UserController extends Controller
 {    use GeneralTrait;
@@ -73,7 +74,15 @@ class UserController extends Controller
             $data = $request->input();
             if(Auth::attempt((['email' => $data['email'], 'password' => $data['password']]))){
                 $user = Auth::user();
-                $user->token = $user->createToken("API TOKEN")->plainTextToken;
+                if ($user->role_number == null)
+                    $user->token = $user->createToken("API TOKEN",['role:provincial'])->plainTextToken;
+                elseif ($user->role_number == 1)
+                    $user->token = $user->createToken("API TOKEN",['role:local'])->plainTextToken;
+                elseif ($user->role_number == 2)
+                    $user->token = $user->createToken("API TOKEN",['role:financial'])->plainTextToken;
+                elseif ($user->role_number == 3)
+                    $user->token = $user->createToken("API TOKEN",['role:employ'])->plainTextToken;
+
                 $data= [
                     'user' => $user
                 ];
@@ -87,7 +96,7 @@ class UserController extends Controller
             return $this->returnError($th->getMessage(),500);
 
         }
-        
+
     }
 
 

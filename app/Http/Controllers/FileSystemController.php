@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Folder;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class FileSystemController extends Controller
-{
+{   use GeneralTrait;
     public function AddFolder(Request $req) {
+
         Folder::create([
             'project_id'=>$req->project_id,
             'name'=>$req->name,

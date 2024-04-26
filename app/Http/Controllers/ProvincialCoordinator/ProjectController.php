@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
-    public function CreateProject(CreateProjectRequest $request)
+    public function createProject(CreateProjectRequest $request)
     {
         try {
             $project = Project::create([
@@ -22,7 +22,7 @@ class ProjectController extends Controller
                 'end_date'=>   $request->end_date,
                 'center_id'=>  $request->center_id,
             ]);
-return ResponseHelper::success('project created successfully');
+                return ResponseHelper::success('project created successfully');
 
         } catch (\Throwable $th) {
             return ResponseHelper::error('Error');
@@ -35,7 +35,7 @@ return ResponseHelper::success('project created successfully');
         try {
             $projects=Project::query()->get()->toArray();
 
-return ResponseHelper::success($projects);
+            return ResponseHelper::success($projects);
         }
         catch (\Throwable $th) {
             return ResponseHelper::error('Error');
