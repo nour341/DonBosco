@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\ProvincialCoordinator\CenterController;
 use App\Http\Controllers\ProvincialCoordinator\CountryController;
+use App\Http\Controllers\ProvincialCoordinator\EmployController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\FileSystemController;
 use App\Http\Controllers\ProvincialCoordinator\ProjectController;
 use App\Http\Controllers\ProvincialCoordinator\ReportController;
@@ -21,12 +21,14 @@ use App\Http\Controllers\UserController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |*/
 
-//Route::group(["middleware"=>['auth:sanctum']],function()
-//        {
-//           // Route::post('get_information_of_user',[CoController::class,'get_information_of_user']);
-//
-//
-//        });
+Route::group(["middleware"=>['auth:sanctum'],'type.provincial'],function()
+        {
+           // Route::post('get_information_of_user',[CoController::class,'get_information_of_user']);
+
+        });
+
+
+
 
 
 ############################ Country ########################################
@@ -45,6 +47,7 @@ Route::get('/getCenter/{id}', [CenterController::class, 'getCenter']);
 Route::get('/getProjectsCenter/{id}', [CenterController::class, 'getProjectsCenter']);
 ############################ END ########################################
 
+
 ############################ Folder ########################################
 Route::post('AddFolder', [FileSystemController::class, 'AddFolder']);
 Route::post('ShowFolder/{id}', [FileSystemController::class, 'ShowFolder']);
@@ -62,3 +65,21 @@ Route::post('/CreateProject', [ProjectController::class, 'CreateProject']);
 Route::get('getProjects', [ProjectController::class, 'getProjects']);
 Route::post('getProject/{id}', [ProjectController::class, 'getProject']);
 Route::post('getBudget', [ProjectController::class, 'getBudget']);
+
+//////////////////////////////////////////////////////////////////////
+
+
+
+############################ Project wissam ########################################
+
+
+Route::post('add_team_project', [EmployController::class, 'add_team_project']);
+Route::post('get_team_project', [EmployController::class, 'get_team_project']);
+Route::post('get_workflow_plan', [EmployController::class, 'get_workflow_plan']);
+Route::post('confirm_task', [EmployController::class, 'confirm_task']);
+Route::post('add_task', [EmployController::class, 'add_task']);
+Route::post('git_project_financier', [EmployController::class, 'git_project_financier']);
+Route::post('createEmploy', [EmployController::class, 'createEmploy']);
+
+
+

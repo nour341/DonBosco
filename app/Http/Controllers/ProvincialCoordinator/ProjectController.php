@@ -52,26 +52,26 @@ class ProjectController extends Controller
         return ResponseHelper::success($Project);
     }
 
-    public function getBudget(Request $req)
-    {
-        $project=Project::find($req->project_id);
-        if ($project) {
+    // public function getBudget(Request $req)
+    // {
+    //     $project=Project::find($req->project_id);
+    //     if ($project) {
 
-            $Budgets = $project->budget()->get();
+    //         $Budgets = $project->budget()->get();
 
-            $arr = [
-                'message' => $Budgets,
-                'status' => 200
-            ];
-        } else {
-            $arr = [
-                'message' => 'Project not found',
-                'status' => 404
-            ];
-        }
+    //         $arr = [
+    //             'message' => $Budgets,
+    //             'status' => 200
+    //         ];
+    //     } else {
+    //         $arr = [
+    //             'message' => 'Project not found',
+    //             'status' => 404
+    //         ];
+    //     }
 
-        return response($arr, $arr['status']);
-    }
+    //     return response($arr, $arr['status']);
+    // }
 
 
 
@@ -82,9 +82,8 @@ class ProjectController extends Controller
 
    // public function getProjectsService(){
 
-//       $result=app(ProjectService::class)-> getProjects();
+   //     $result=app(ProjectService::class)-> getProjects();
   //      return $result;
 
    //}
-
-}
+   }

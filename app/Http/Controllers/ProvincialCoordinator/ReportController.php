@@ -30,24 +30,24 @@ class ReportController extends Controller
 
     }
 
-    public function showReports(){
+   /// public function showReports(){
 
-        try {
-            $files=File::query()->get()->toArray();
+      //  try {
+        //    $files=File::query()->get()->toArray();
 
-            return ResponseHelper::success($files);
+          //  return ResponseHelper::success($files);
+        //}
+        //catch (\Throwable $th) {
+          //  return ResponseHelper::error('Error');
+        //}
+
+   // }
+    public function getFolderReports($id){
+        $Reports=Folder::where('id',$id)->with('Reports')->get()->toArray();
+      if(!$Reports){
+          return ResponseHelper::error('Error');
         }
-        catch (\Throwable $th) {
-            return ResponseHelper::error('Error');
-        }
-
+        return ResponseHelper::success($Reports);
     }
-   // public function getFolderReports($id){
-    //    $Reports=Folder::where('id',$id)->with('Reports')->get()->toArray();
-      //  if(!$Reports){
-        //   return ResponseHelper::error('Error');
-      //  }
-        //return ResponseHelper::success($Reports);
-    //}
 
 }
