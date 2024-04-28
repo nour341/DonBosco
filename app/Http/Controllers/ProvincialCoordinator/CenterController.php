@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\ProvincialCoordinator;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CenterRequest;
 use App\Models\Center;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
@@ -13,7 +12,7 @@ class CenterController extends Controller
 {
     use GeneralTrait;
     //
-    public function createCenter(CenterRequest $request)
+    public function createCenter(Request $request)
     {
         //Validated
         $validate = Validator::make($request->all(), [
@@ -134,7 +133,6 @@ class CenterController extends Controller
         }
         $centers=Center::with('projects')->find($id);
         $projects = $centers->projects;
-
         $projects = [
             'projects' => $projects
         ];
@@ -142,3 +140,4 @@ class CenterController extends Controller
 
     }
 }
+
