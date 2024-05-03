@@ -5,126 +5,164 @@ namespace App\Http\Controllers\ProvincialCoordinator;
 use App\Helper\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateProjectRequest;
-use App\Models\Budget;
-use App\Models\Item;
 use App\Models\Project;
 use App\Services\ProjectService;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
-    public function CreateProject(CreateProjectRequest $request)
+    use GeneralTrait;
+    public function CreateProject(Request $request)
     {
+
+        $validate = Validator::make($request->all(),
+            [
+
+//                'name' => 'required|unique:projects',
+                'name' => 'required',
+                'local_coordinator_id' => 'required|exists:users,id,role_number,1',
+                'financial_management_id' => 'required|exists:users,id,role_number,2',
+                'supplier_id' => 'required|exists:users,id,role_number,4',
+                'short_description'=> 'required',
+                'start_date'=> 'required|date',
+                'end_date'=> 'required|date|after:start_date',
+                'center_id'=> 'required|exists:centers,id',
+            ]);
+
+
+        if($validate->fails()){
+            return $this->returnErrorValidate($validate->errors());
+        }
         try {
+
             $project = Project::create([
                 'name' => $request->name,
-                'Total' => $request->Total,
-                'description'=> $request->description,
+                'local_coordinator_id' => $request->local_coordinator_id,
+                'financial_management_id' => $request->financial_management_id,
+                'supplier_id' => $request->supplier_id,
+                'short_description'=> $request->short_description,
                 'start_date'=>  $request->start_date,
                 'end_date'=>   $request->end_date,
                 'center_id'=>  $request->center_id,
-                'LocalName'=>  $request->LocalName,
-                'FinancialName'=>   $request->FinancialName,
-                'FinName'=>  $request->FinName,
             ]);
-         return ResponseHelper::success('project created successfully');
+
+            return $this->returnSuccess("Project created successfully");
 
         } catch (\Throwable $th) {
-            return ResponseHelper::error('Error');
+            return $this->returnError('Failed to create the country. Try again after some time');
+        }
+    }
+    public function updateProject(Request $request)
+    {
+
+        $validate = Validator::make($request->all(),
+            [
+
+                'id' => 'required',
+                'name' => 'required',
+                'local_coordinator_id' => 'required|exists:users,id,role_number,1',
+                'financial_management_id' => 'required|exists:users,id,role_number,2',
+                'supplier_id' => 'required|exists:users,id,role_number,4',
+                'short_description'=> 'required',
+                'start_date'=> 'required|date',
+                'end_date'=> 'required|date|after:start_date',
+                'center_id'=> 'required|exists:centers,id',
+            ]);
+
+
+        if($validate->fails()){
+            return $this->returnErrorValidate($validate->errors());
 
         }
+        try {
+            $project=Project::find($request->id);
+            if(!$project){
+                return $this->returnError('Failed to updated the project does not exist',404);
+            }
+
+            $project->update([
+                'name' => $request->name,
+                'local_coordinator_id' => $request->local_coordinator_id,
+                'financial_management_id' => $request->financial_management_id,
+                'supplier_id' => $request->supplier_id,
+                'short_description'=> $request->short_description,
+                'start_date'=>  $request->start_date,
+                'end_date'=>   $request->end_date,
+                'center_id'=>  $request->center_id,
+            ]);
+
+            return $this->returnSuccess("project updated Successfully");
+
+        } catch (\Throwable $th) {
+            return $this->returnError('Failed to updated the project. Try again after some time');
+        }
+
+    }
+
+    public function changeStatusProject(Request $request){
+
+        $validate = Validator::make($request->all(),
+            [
+                'id' => 'required',
+            ]);
+
+        if($validate->fails()){
+            return $this->returnErrorValidate($validate->errors());
+
+        }
+        try {
+            $project=Project::find($request->id);
+            if(!$project){
+                return $this->returnError('Failed to updated the project does not exist',404);
+            }
+            $status = 1;
+            if ($project->status ==1)
+                $status = 0;
+
+            $project->update([
+                'status' => $status,
+            ]);
+
+            return $this->returnSuccess("project updated status Successfully");
+
+        } catch (\Throwable $th) {
+            return $this->returnError('Failed to updated the project. Try again after some time');
+        }
+
     }
 
     public function getProjects(){
 
         try {
-            $projects=Project::query()->get()->toArray();
+            $projects=Project::get();
+            foreach ($projects as $project) {
+                $project->status = $project->getStatus();
+            }
 
-    return ResponseHelper::success($projects);
+
+
+            return $this->returnData('projects',$projects,'Get the all projects successfully');
+
         }
         catch (\Throwable $th) {
-            return ResponseHelper::error('Error');
-
+            return $this->returnError('Failed Get the  projects. Try again after some time');
         }
 
     }
 
-    public function getProject($id){
-        $Project=Project::find($id);
-        if(!$Project){
-            return ResponseHelper::error('Error');
+
+    public function getProject(Request $request){
+        $id = $request->id;
+        $project=Project::find($id);
+        $project->status = $project->getStatus();
+        if(!$project){
+            return $this->returnError('Failed to get country. the Project does not exist',404);
         }
-        return ResponseHelper::success($Project);
+
+        return $this->returnData('project',$project,'Get the Projects successfully');
     }
-
-    // public function AddBudget(Request $request) {
-    //     $validatedData = $request->validate([
-    //         'balance' => 'required|numeric',
-    //         'project_id' => 'required|:projects_id',
-    //        // 'item_id' => 'required|exists:items_id',
-    //     ]);
-
-    //     $projects = Project::select('start_date', 'end_date','Total')->get();
-
-    //     foreach ($projects as $project) {
-    //         $startDate = $project->start_date;
-    //         $endDate = $project->end_date;
-    //     }
-    //     $items = Item::find($validatedData['item_id']);
-    //     foreach ($items as $item) {
-
-    //         $budget = new Budget();
-    //        // $budget->item_id = $item->id;
-    //         $budget->number = null;
-    //         $budget->name = null;
-    //         $budget->unite = null;
-    //         $budget->unit_price = null;
-    //         $budget->quantity = null;
-    //         $budget->total_price = null;
-    //         $budget->save();
-    //     }
-
-    //     $budget->balance = $validatedData['balance'];
-    //     $budget->start_date = $project->start_date;
-    //     $budget->end_date = $project->end_date;
-    //     $budget->save();
-
-    //     return response()->json(['message' => 'Budget added successfully', 'budget' => $budget], 200);
-    // }
-
-
-//     public function AddBudget(Request $request)
-// {
-//     $data = $request->all();
-
-//     $project = Project::find($data['project_id']);
-
-//     if ($project) {
-//         $budget = new Budget();
-//         $budget->balance = $data['balance'];
-//         $budget->project_id = $data['project_id'];
-//         $budget->start_date = $project->start_date;
-//         $budget->end_date = $project->end_date;
-
-//         $item = Item::where('number', $data['number'])->first();
-
-//         if ($item) {
-//             $budget->name = $item->name;
-//             $budget->unite = $item->unite;
-//             $budget->unit_price = $item->unit_price;
-//             $budget->quantity = $item->quantity;
-//             $budget->total_price = $item->total_price;
-//             $budget->save();
-
-//             return response()->json(['message' => 'Budget added successfully'], 200);
-//         } else {
-//             return response()->json(['message' => 'Item not found'], 404);
-//         }
-//     } else {
-//         return response()->json(['message' => 'Project not found'], 404);
-//     }
-// }
 
 
 
@@ -148,6 +186,11 @@ class ProjectController extends Controller
 
     //     return response($arr, $arr['status']);
     // }
+
+
+
+
+
 
 
 

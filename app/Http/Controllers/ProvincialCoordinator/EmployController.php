@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ProvincialCoordinator;
 
 use App\Http\Controllers\Controller;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use App\Models\ProjectUser;
 use App\Models\Project;
@@ -14,9 +15,10 @@ use Illuminate\Support\Facades\Validator;
 
 
 class EmployController extends Controller
-{
+{   use GeneralTrait;
     public function add_team_project(Request  $req)
     {
+
         $rules = [
             'project_id' => 'required|integer|exists:projects,id',
             'user_id' => 'required|integer|exists:users,id',
@@ -35,24 +37,34 @@ class EmployController extends Controller
         ];
 
         // إنشاء المُحقق
-        $validator = Validator::make($req->all(), $rules, $messages);
+        $validate = Validator::make($req->all(), $rules, $messages);
 
         // التحقق من البيانات
-        if ($validator->fails()) {
-            // الاستجابة بالأخطاء إذا فشل التحقق
-            return response()->json($validator->errors(), 400);
+        if($validate->fails()){
+            $errors = [ 'errorsValidator' => $validate->errors()];
+            return $this->returnErrorValidate($errors);
+
         }
-        ProjectUser::create([
-            'project_id'=>$req->project_id,
-            'user_id'=>$req->user_id,
-        ]);
-        $arr=[
-            'message'=>'The employee has been successfully selected for the project',
-            'status'=>200
-        ];
-        return response($arr,200);
+
+        try {
+
+            ProjectUser::create([
+                'project_id'=>$req->project_id,
+                'user_id'=>$req->user_id,
+            ]);
+
+            return $this->returnSuccess('The employee has been successfully selected for the project');
+
+
+        } catch (\Throwable $th) {
+            return $this->returnError($th->getMessage());
+
+        }
+
+
 
     }
+
     public function get_team_project(Request  $req)
     {
         $rules = [
@@ -67,32 +79,26 @@ class EmployController extends Controller
         ];
 
         // إنشاء المُحقق
-        $validator = Validator::make($req->all(), $rules, $messages);
+        $validate = Validator::make($req->all(), $rules, $messages);
 
         // التحقق من البيانات
-        if ($validator->fails()) {
-            // الاستجابة بالأخطاء إذا فشل التحقق
-            return response()->json($validator->errors(), 400);
+        if($validate->fails()){
+            $errors = [ 'errorsValidator' => $validate->errors()];
+            return $this->returnErrorValidate($errors);
+
         }
+
         $project=Project::find($req->project_id);
-        if ($project) {
-            // تأكد من استدعاء دالة get() للحصول على النتائج الفعلية للمستخدمين
-            $users = $project->users()->get();
-
-            $arr = [
-                'message' => $users,
-                'status' => 200
-            ];
-        } else {
-            // إذا لم يتم العثور على المشروع، يمكنك إرجاع رسالة خطأ
-            $arr = [
-                'message' => 'Project not found',
-                'status' => 404
-            ];
+        if(!$project){
+            return $this->returnError('Failed to get project. the project does not exist',404);
         }
+        // تأكد من استدعاء دالة get() للحصول على النتائج الفعلية للمستخدمين
+        $users = $project->users()->get();
 
-        return response($arr, $arr['status']);
+        return $this->returnData('users',$users,'Get the Tasks successfully');
+
     }
+
     public function add_task(Request $req)
     {
         $rules = [
@@ -126,26 +132,32 @@ class EmployController extends Controller
         ];
 
         // إنشاء المُحقق
-        $validator = Validator::make($req->all(), $rules, $messages);
+        $validate = Validator::make($req->all(), $rules, $messages);
 
         // التحقق من البيانات
-        if ($validator->fails()) {
-            // الاستجابة بالأخطاء إذا فشل التحقق
-            return response()->json($validator->errors(), 400);
+        if($validate->fails()){
+            $errors = [ 'errorsValidator' => $validate->errors()];
+            return $this->returnErrorValidate($errors);
+
         }
-        Task::create([
-            'project_id'=>$req->project_id,
-            'user_id'=>$req->user_id,
-            'description'=>$req->description,
-            'end_date'=>$req->end_date,
-            'start_date'=>$req->start_date,
-            'status'=>$req->status,
-        ]);
-        $arr=[
-            'message'=>'The task has been successfully selected for the project',
-            'status'=>200
-        ];
-        return response($arr,200);
+        try {
+
+            Task::create([
+                'project_id'=>$req->project_id,
+                'user_id'=>$req->user_id,
+                'description'=>$req->description,
+                'end_date'=>$req->end_date,
+                'start_date'=>$req->start_date,
+                'status'=>$req->status,
+            ]);
+
+            return $this->returnSuccess('The task has been successfully selected for the project');
+
+        } catch (\Throwable $th) {
+            return $this->returnError($th->getMessage());
+
+        }
+
     }
     public function get_workflow_plan(Request $req)
     {
@@ -161,31 +173,22 @@ class EmployController extends Controller
         ];
 
         // إنشاء المُحقق
-        $validator = Validator::make($req->all(), $rules, $messages);
+        $validate = Validator::make($req->all(), $rules, $messages);
 
         // التحقق من البيانات
-        if ($validator->fails()) {
-            // الاستجابة بالأخطاء إذا فشل التحقق
-            return response()->json($validator->errors(), 400);
+        if($validate->fails()){
+            $errors = [ 'errorsValidator' => $validate->errors()];
+            return $this->returnErrorValidate($errors);
+
         }
         $project=Project::find($req->project_id);
-        if ($project) {
-            // تأكد من استدعاء دالة get() للحصول على النتائج الفعلية للمستخدمين
-            $tasks = $project->tasks()->get();
-
-            $arr = [
-                'message' => $tasks,
-                'status' => 200
-            ];
-        } else {
-            // إذا لم يتم العثور على المشروع، يمكنك إرجاع رسالة خطأ
-            $arr = [
-                'message' => 'Project not found',
-                'status' => 404
-            ];
+        if(!$project){
+            return $this->returnError('Failed to get project. the project does not exist',404);
         }
+        $tasks = $project->tasks()->get();
 
-        return response($arr, $arr['status']);
+        return $this->returnData('tasks',$tasks,'Get the Tasks successfully');
+
     }
     public function confirm_task(Request $req)
     {
@@ -201,12 +204,13 @@ class EmployController extends Controller
         ];
 
         // إنشاء المُحقق
-        $validator = Validator::make($req->all(), $rules, $messages);
+        $validate = Validator::make($req->all(), $rules, $messages);
 
         // التحقق من البيانات
-        if ($validator->fails()) {
-            // الاستجابة بالأخطاء إذا فشل التحقق
-            return response()->json($validator->errors(), 400);
+        if($validate->fails()){
+            $errors = [ 'errorsValidator' => $validate->errors()];
+            return $this->returnErrorValidate($errors);
+
         }
         $task = Task::find($req->task_id);
 
@@ -216,17 +220,11 @@ class EmployController extends Controller
             $task->update([
                 'status' => 'abroved'
             ]);
-
-            return response()->json([
-                'message' => 'Task updated successfully!',
-
-            ], 200);
+            return $this->returnSuccess("Task updated successfully!");
         }
 
         // إذا لم يتم العثور على المهمة، أرجع رسالة خطأ
-        return response()->json([
-            'message' => 'Task not found'
-        ], 404);
+        return $this->returnError('Task not found',404);
     }
     public function git_project_financier(Request $req)
     {
@@ -242,73 +240,27 @@ class EmployController extends Controller
         ];
 
         // إنشاء المُحقق
-        $validator = Validator::make($req->all(), $rules, $messages);
+        $validate = Validator::make($req->all(), $rules, $messages);
+        if($validate->fails()){
+            $errors = [ 'errorsValidator' => $validate->errors()];
+            return $this->returnErrorValidate($errors);
 
-        // التحقق من البيانات
-        if ($validator->fails()) {
-            // الاستجابة بالأخطاء إذا فشل التحقق
-            return response()->json($validator->errors(), 400);
         }
+
         $user=User::find($req->user_id);
-        if ($user) {
+            if(!$user){
+                return $this->returnError('Failed to get user. the user does not exist',404);
+            }
             // تأكد من استدعاء دالة get() للحصول على النتائج الفعلية للمستخدمين
             $projects = $user->projects()->get();
 
-            $arr = [
-                'message' => $projects,
-                'status' => 200
-            ];
-        } else {
-            // إذا لم يتم العثور على المشروع، يمكنك إرجاع رسالة خطأ
-            $arr = [
-                'message' => 'Downer not found',
-                'status' => 404
-            ];
-        }
+            return $this->returnData('projects',$projects,'Get the Projects successfully');
 
-        return response($arr, $arr['status']);
+
     }
 
-    public function createEmploy(Request $request)
-    {
-        try {
-            //Validated
-            $validateUser = Validator::make($request->all(),
-                [
-                    'name' => 'required',
-                    'email' => 'required|email|unique:users,email',
-                    'password' => 'required',
-                    'role_number' => 'required',
-                    'gender' => 'required',
-                ]);
 
-            if($validateUser->fails()){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $validateUser->errors()
-                ], 401);
-            }
-
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role_number' => $request->role_number,
-                'gender' => $request->gender,
-            ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'User Creat Employed  Successfully',
-            ], 200);
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
-        }
-    }
 
 }
+
+

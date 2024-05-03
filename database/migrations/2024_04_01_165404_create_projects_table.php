@@ -16,14 +16,14 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->double('Total');
-            $table->text('description');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->string('LocalName');
-            $table->string('FinancialName');
-            $table->string('FinName');
+            $table->integer('local_coordinator_id');
+            $table->integer('financial_management_id');
+            $table->integer('supplier_id');
+            $table->text('short_description')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->unsignedBigInteger('center_id');
+            $table->boolean('status')->default(false);
             $table->foreign('center_id')->references('id')->on('centers')->onDelete('cascade');
             $table->timestamps();
         });

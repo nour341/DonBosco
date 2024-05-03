@@ -9,7 +9,7 @@ class Country extends Model
 {
     use HasFactory;
 //    protected $table = 'countries';
-    protected $fillable = ['name'];
+    protected $fillable = ['id','name','code','phoneCode'];
 
     public function centers()
        {

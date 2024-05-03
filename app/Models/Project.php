@@ -11,19 +11,26 @@ class Project extends Model
 {
     use HasFactory;
     protected $table = 'projects';
-    protected $fillable = [
-        'name',
-        'Total',
-        'description',
-        'start_date',
-        'end_date',
-        'LocalName',
-        'FinancialName',
-        'FinName',
-        'center_id'];
+    protected $fillable =
+        [
+            'name',
+            'local_coordinator_id',
+            'financial_management_id',
+            'supplier_id',
+            'short_description',
+            'start_date',
+            'end_date',
+            'center_id',
+            'status'];
+
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
     public function center()
        {
-           return $this->belongsTo(Center::class); // تأكد من استخدام الاسم الصحيح لموديل Country
+           return $this->belongsTo(Center::class);
        }
        public function users()
        {
@@ -43,7 +50,11 @@ class Project extends Model
         {
             return $this->hasOne(Budget::class);
         }
+    public function  getStatus(){
 
+        return $this ->status == 1 ? "Publication" : "Unpublished";
+
+    }
 
 
 }

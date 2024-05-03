@@ -31,13 +31,21 @@ trait GeneralTrait
         ]);
 
     }
+    public function returnErrorValidate($msg='',$code=400){
 
-    public function returnData($value,$msg='',$code = 200){
+        return response()->json([
+            'state'=>false,
+            'errorsValidator'=> $msg,
+            'code'=> $code,
+        ]);
+
+    }
+    public function returnData($key,$value,$msg='',$code = 200){
 
         return response()->json([
                 'state'=>true,
                 'message'=> $msg,
-                'data'=> $value,
+                $key=> $value,
                 'code'=> $code,
             ]);
     }

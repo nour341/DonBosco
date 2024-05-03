@@ -23,11 +23,8 @@ class CenterController extends Controller
         ]);
 
         if($validate->fails()){
-            return response()->json([
-                'status' => false,
-                'message' => 'validation error',
-                'errors' => $validate->errors()
-            ], 401);
+            return $this->returnErrorValidate($validate->errors());
+
         }
 
         try {
@@ -61,22 +58,19 @@ class CenterController extends Controller
                 'country_id' => 'required|exists:countries,id',
             ]);
         if($validate->fails()){
-            return response()->json([
-                'status' => false,
-                'message' => 'validation error',
-                'errors' => $validate->errors()
-            ], 401);
+            return $this->returnErrorValidate($validate->errors());
+
         }
         try {
             $center=Center::find($request->id);
             if(!$center){
-                return $this->returnError('Failed to updated the center does not exist');
+                return $this->returnError('Failed to updated the center does not exist',404);
             }
             if ($request->has('image_path')) {
                 $this->deletImage($center->image_path);
                 $image_path = $this->saveImage($request->image_path, 'images/Center');
                 $center->update([
-                    'main_img' => $image_path,
+                    'image_path' => $image_path,
                 ]);
             }
 
@@ -93,14 +87,40 @@ class CenterController extends Controller
         }
     }
 
+    public function deleteCenter(Request $request)
+    {
+        //Validated
+        $validate = Validator::make($request->all(),
+            [
+                'center_id' => 'required',
+            ]);
+        if($validate->fails()){
+            return $this->returnErrorValidate($validate->errors());
+
+        }
+
+        try {
+            $center=Center::find($request->center_id);
+            if(!$center){
+                return $this->returnError('Failed to deleted the center does not exist',404);
+            }
+
+            $this->deletImage($center->image_path);
+            $center->delete();
+
+            return $this->returnSuccess("Center deleted Successfully");
+
+        } catch (\Throwable $th) {
+            return $this->returnError('Failed to deleted the center. Try again after some time');
+        }
+    }
+
     public function getCenters(){
 
         try {
-            $centers=Center::with('projects')->get();
-            $centers = [
-                'centers' => $centers
-            ];
-            return $this->returnData($centers,'Get the all Centers successfully');
+            $centers=Center::get();
+
+            return $this->returnData('centers',$centers,'Get the all Centers successfully');
 
         }
         catch (\Throwable $th) {
@@ -109,34 +129,31 @@ class CenterController extends Controller
 
     }
 
-    public function getCenter($id){
-        $centers=Center::find($id);
-        if(!$centers){
-            return $this->returnError('Failed to get centers. the centers does not exist');
+    public function getCenter(Request $request){
+        $id = $request->id;
+        $center=Center::find($id);
+        if(!$center){
+            return $this->returnError('Failed to get centers. the centers does not exist',404);
         }
-        $centers=Center::with('projects')->find($id);
 
-        $centers = [
-            'center' => $centers
-        ];
-
-        return $this->returnData($centers,'Get the centers successfully');
+        return $this->returnData('center',$center,'Get the centers successfully');
 
     }
 
 
 
-    public function getProjectsCenter($id){
+    public function getProjectsCenter(Request $request){
+        $id = $request->center_id;
         $centers=Center::find($id);
         if(!$centers){
-            return $this->returnError('Failed to get centers. the centers does not exist');
+            return $this->returnError('Failed to get centers. the centers does not exist',404);
         }
         $centers=Center::with('projects')->find($id);
         $projects = $centers->projects;
-        $projects = [
-            'projects' => $projects
-        ];
-        return $this->returnData($projects,'Get the Projects successfully');
+        foreach ($projects as $project) {
+            $project->status = $project->getStatus();
+        }
+        return $this->returnData('projects',$projects,'Get the Projects successfully');
 
     }
 }

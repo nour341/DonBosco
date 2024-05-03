@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+
 class CountryController extends Controller
 {    use GeneralTrait;
     //
@@ -19,11 +20,8 @@ class CountryController extends Controller
             ]);
 
         if($validate->fails()){
-            return response()->json([
-                'status' => false,
-                'message' => 'validation error',
-                'errors' => $validate->errors()
-            ], 401);
+            return $this->returnErrorValidate($validate->errors());
+
         }
         try {
             $country = Country::create([
@@ -45,17 +43,14 @@ class CountryController extends Controller
                 'name' => 'required',
             ]);
         if($validate->fails()){
-            return response()->json([
-                'status' => false,
-                'message' => 'validation error',
-                'errors' => $validate->errors()
-            ], 401);
+            return $this->returnErrorValidate($validate->errors());
+
         }
         try {
 
             $country=Country::find($request->id);
             if(!$country){
-                 return $this->returnError('Failed to updated the country does not exist');
+                 return $this->returnError('Failed to updated the country does not exist',404);
             }
 
             $country->update([
@@ -69,14 +64,38 @@ class CountryController extends Controller
         }
     }
 
+    public function deleteCountry(Request $request)
+    {
+        //Validated
+        $validate = Validator::make($request->all(),
+            [
+                'id' => 'required',
+            ]);
+        if($validate->fails()){
+            return $this->returnErrorValidate($validate->errors());
+        }
+        try {
+
+            $country=Country::find($request->id);
+            if(!$country){
+                 return $this->returnError('Failed to deleted the country does not exist',404);
+            }
+
+            $country->delete();
+
+            return $this->returnSuccess("Country deleted Successfully");
+
+        } catch (\Throwable $th) {
+            return $this->returnError('Failed to deleted the country. Try again after some time');
+        }
+    }
+
     public function getCountries(){
 
         try {
-            $countries=Country::with('centers')->get();
-            $countries = [
-                'countries' => $countries
-            ];
-            return $this->returnData($countries,'Get the all Countries successfully');
+            $countries=Country::get();
+
+            return $this->returnData('countries',$countries,'Get the all Countries successfully');
 
         }
         catch (\Throwable $th) {
@@ -85,34 +104,45 @@ class CountryController extends Controller
 
     }
 
-    public function getCountry($id){
+    public function getCountry(Request $request){
+        $id = $request->country_id;
         $country=Country::find($id);
         if(!$country){
-            return $this->returnError('Failed to get country. the country does not exist');
+            return $this->returnError('Failed to get country. the country does not exist',404);
         }
-        $country=Country::with('centers')->find($id);
+        $country=Country::find($id);
 
-        $country = [
-        'country' => $country
-        ];
 
-        return $this->returnData($country,'Get the country successfully');
+        return $this->returnData('country',$country,'Get the country successfully');
 
     }
-    public function getProjectsCountry($id){
+    public function getProjectsCountry(Request $request){
+        $id = $request->country_id;
         $country=Country::find($id);
         if(!$country){
-            return $this->returnError('Failed to get country. the country does not exist');
+            return $this->returnError('Failed to get country. the country does not exist',404);
         }
         $country=Country::with('centers')->find($id);
-        $projects = $country->centers()->with('projects')->get();
-
-        $projects = [
-        'projects' => $projects
-        ];
-        return $this->returnData($projects,'Get the Projects successfully');
+        $centers = $country->centers()->with('projects')->get();
+        $projects = $centers->pluck('projects')->flatten();
+        foreach ($projects as $project) {
+            $project->status = $project->getStatus();
+        }
+        return $this->returnData('projects',$projects,'Get the Projects successfully');
 
     }
 
+    public function getCentersCountry(Request $request){
+        $id = $request->country_id;
+        $country=Country::find($id);
+        if(!$country){
+            return $this->returnError('Failed to get country. the country does not exist',404);
+        }
+        $country=Country::with('centers')->find($id);
+        $centers = $country->centers()->get();
+
+        return $this->returnData('centers',$centers,'Get the Centers successfully');
+
+    }
 
 }
