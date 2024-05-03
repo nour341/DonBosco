@@ -61,12 +61,11 @@ class ProjectController extends Controller
     // public function AddBudget(Request $request) {
     //     $validatedData = $request->validate([
     //         'balance' => 'required|numeric',
-    //         'total' => 'required|numeric',
     //         'project_id' => 'required|:projects_id',
-    //         'item_id' => 'required|exists:items_id',
+    //        // 'item_id' => 'required|exists:items_id',
     //     ]);
 
-    //     $projects = Project::select('start_date', 'end_date')->get();
+    //     $projects = Project::select('start_date', 'end_date','Total')->get();
 
     //     foreach ($projects as $project) {
     //         $startDate = $project->start_date;
@@ -76,7 +75,7 @@ class ProjectController extends Controller
     //     foreach ($items as $item) {
 
     //         $budget = new Budget();
-    //         $budget->item_id = $item->id;
+    //        // $budget->item_id = $item->id;
     //         $budget->number = null;
     //         $budget->name = null;
     //         $budget->unite = null;
@@ -86,15 +85,47 @@ class ProjectController extends Controller
     //         $budget->save();
     //     }
 
-    //     $budget = new Budget();
     //     $budget->balance = $validatedData['balance'];
-    //     $budget->balance = $validatedData['total'];
     //     $budget->start_date = $project->start_date;
     //     $budget->end_date = $project->end_date;
     //     $budget->save();
 
     //     return response()->json(['message' => 'Budget added successfully', 'budget' => $budget], 200);
     // }
+
+
+//     public function AddBudget(Request $request)
+// {
+//     $data = $request->all();
+
+//     $project = Project::find($data['project_id']);
+
+//     if ($project) {
+//         $budget = new Budget();
+//         $budget->balance = $data['balance'];
+//         $budget->project_id = $data['project_id'];
+//         $budget->start_date = $project->start_date;
+//         $budget->end_date = $project->end_date;
+
+//         $item = Item::where('number', $data['number'])->first();
+
+//         if ($item) {
+//             $budget->name = $item->name;
+//             $budget->unite = $item->unite;
+//             $budget->unit_price = $item->unit_price;
+//             $budget->quantity = $item->quantity;
+//             $budget->total_price = $item->total_price;
+//             $budget->save();
+
+//             return response()->json(['message' => 'Budget added successfully'], 200);
+//         } else {
+//             return response()->json(['message' => 'Item not found'], 404);
+//         }
+//     } else {
+//         return response()->json(['message' => 'Project not found'], 404);
+//     }
+// }
+
 
 
     // public function getBudget(Request $req)

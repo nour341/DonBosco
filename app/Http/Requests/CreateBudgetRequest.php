@@ -25,16 +25,6 @@ class CreateBudgetRequest extends FormRequest
     {
         return [
 
-            //'BL' => 'required:budgets',
-            //'item'=> 'required:budgets',
-            //'Unit'=> 'required:budgets',
-            //'UnitPrice'=> 'required:budgets',
-            //'Quantity'=> 'required:budgets',
-            'TotalPrice'=> 'required:budgets',
-            'balance'=> 'required:budgets',
-            //'start_date'=> 'required:budgets',
-            //'end_date'=> 'required:budgets',
-            'project_id'=> 'required:budgets',
         ];
     }
 }

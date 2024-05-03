@@ -66,7 +66,8 @@ Route::get('getProjects', [ProjectController::class, 'getProjects']);
 Route::post('getProject/{id}', [ProjectController::class, 'getProject']);
 Route::post('getBudget', [ProjectController::class, 'getBudget']);
 
-//////////////////////////////////////////////////////////////////////
+############################ Budget ########################################
+Route::post('AddBudget', [ProjectController::class, 'AddBudget']);
 
 
 
