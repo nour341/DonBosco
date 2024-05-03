@@ -11,7 +11,16 @@ class Project extends Model
 {
     use HasFactory;
     protected $table = 'projects';
-    protected $fillable = ['name','description','start_date','end_date','center_id'];
+    protected $fillable = [
+        'name',
+        'Total',
+        'description',
+        'start_date',
+        'end_date',
+        'LocalName',
+        'FinancialName',
+        'FinName',
+        'center_id'];
     public function center()
        {
            return $this->belongsTo(Center::class); // تأكد من استخدام الاسم الصحيح لموديل Country

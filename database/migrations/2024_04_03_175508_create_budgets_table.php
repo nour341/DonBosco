@@ -15,8 +15,7 @@ return new class extends Migration
     {
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();
-            $table->float('total');
-            $table->float('balance');
+            $table->float('balance')->nullable();
             $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
             $table->timestamps();
         });

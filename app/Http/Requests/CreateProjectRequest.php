@@ -26,10 +26,14 @@ class CreateProjectRequest extends FormRequest
         return [
 
                 'name' => 'required:projects',
+                'Total' => 'required:projects',
                 'description'=> 'required:projects',
                 'start_date'=> 'required:projects',
                 'end_date'=> 'required:projects',
                 'center_id'=> 'required:projects',
+                'LocalName'=> 'required:projects',
+                'FinancialName'=> 'required:projects',
+                'FinName'=> 'required:projects',
                     ];
     }
 }
