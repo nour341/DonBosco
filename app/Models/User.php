@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'role_number',
         'gender',
+        'center_id',
     ];
 
     /**
@@ -42,7 +43,10 @@ class User extends Authenticatable
            return $this->belongsToMany(Project::class);
        }
 
-
+    public function center()
+    {
+        return $this->belongsTo(Center::class,'center_id','id');
+    }
     /**
      * The attributes that should be cast.
      *

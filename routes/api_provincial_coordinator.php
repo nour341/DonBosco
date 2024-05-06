@@ -57,6 +57,9 @@ Route::post('/deleteCenter', [CenterController::class, 'deleteCenter']);
 Route::get('/getCenters', [CenterController::class, 'getCenters']);
 Route::post('/getCenter', [CenterController::class, 'getCenter']);
 Route::post('/getProjectsCenter', [CenterController::class, 'getProjectsCenter']);
+Route::post('/getLocalsCenter', [CenterController::class, 'getLocalsCenter']);
+Route::post('/getFinancialsCenter', [CenterController::class, 'getFinancialsCenter']);
+Route::post('/getEmployeesCenter', [CenterController::class, 'getEmployeesCenter']);
 ############################ END ########################################
 
 

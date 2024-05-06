@@ -33,6 +33,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make(12345678),
                 'role_number' => 1,
                 'gender' => 'male',
+                'center_id' => 1,
             ],
             [
                 'id' => 3,
@@ -41,6 +42,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make(12345678),
                 'role_number' => 2,
                 'gender' => 'male',
+                'center_id' => 1,
             ],
             [
                 'id' => 4,
@@ -49,6 +51,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make(12345678),
                 'role_number' => 3,
                 'gender' => 'male',
+                'center_id' => 1,
             ],
             [
                 'id' => 5,

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->tinyInteger('role_number')->unsigned()->nullable();
             $table->string('gender')->nullable(); // Add a nullable gender column
+            $table->unsignedBigInteger('center_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

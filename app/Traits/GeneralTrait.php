@@ -35,7 +35,7 @@ trait GeneralTrait
 
         return response()->json([
             'state'=>false,
-            'errorsValidator'=> $msg,
+            'message'=> $msg->first(),
             'code'=> $code,
         ]);
 

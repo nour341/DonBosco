@@ -24,6 +24,11 @@ class Center extends Model
        {
            return $this->hasMany(Project::class);
        }
+       public function users()
+       {
+           return $this->hasMany(User::class,'center_id');
+       }
+
 
     protected $hidden = [
         'created_at',

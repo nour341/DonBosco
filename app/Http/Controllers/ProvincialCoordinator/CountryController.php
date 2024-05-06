@@ -17,6 +17,8 @@ class CountryController extends Controller
         $validate = Validator::make($request->all(),
             [
                 'name' => 'required|unique:countries',
+                'code' => 'required',
+                'phoneCode' => 'required',
             ]);
 
         if($validate->fails()){
@@ -26,6 +28,8 @@ class CountryController extends Controller
         try {
             $country = Country::create([
                 'name' => $request->name,
+                'code' => $request->code,
+                'phoneCode' => $request->phoneCode,
             ]);
 
             return $this->returnSuccess("Country Created Successfully");
@@ -41,6 +45,8 @@ class CountryController extends Controller
         $validate = Validator::make($request->all(),
             [
                 'name' => 'required',
+                'code' => 'required',
+                'phoneCode' => 'required',
             ]);
         if($validate->fails()){
             return $this->returnErrorValidate($validate->errors());
@@ -52,9 +58,19 @@ class CountryController extends Controller
             if(!$country){
                  return $this->returnError('Failed to updated the country does not exist',404);
             }
+            // Check if the new Country name already exists
+            $existingCountry = Country::where('name', $request->name)
+                ->where('id', '!=', $request->id)
+                ->first();
+
+            if ($existingCountry) {
+                return $this->returnError('The Country name already exists', 400);
+            }
 
             $country->update([
                 'name'=>$request->name,
+                'code' => $request->code,
+                'phoneCode' => $request->phoneCode,
             ]);
 
             return $this->returnSuccess("Country updated Successfully");

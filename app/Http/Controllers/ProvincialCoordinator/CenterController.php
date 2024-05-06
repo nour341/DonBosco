@@ -66,8 +66,21 @@ class CenterController extends Controller
             if(!$center){
                 return $this->returnError('Failed to updated the center does not exist',404);
             }
+
+            // Check if the new center name already exists
+            $existingCenter = Center::where('name', $request->name)
+                ->where('id', '!=', $request->id)
+                ->first();
+
+            if ($existingCenter) {
+                return $this->returnError('The center name already exists', 400);
+            }
+
+
             if ($request->has('image_path')) {
+                // delete old image
                 $this->deletImage($center->image_path);
+                // save new image
                 $image_path = $this->saveImage($request->image_path, 'images/Center');
                 $center->update([
                     'image_path' => $image_path,
@@ -118,11 +131,20 @@ class CenterController extends Controller
     public function getCenters(){
 
         try {
-            $centers=Center::get();
+//            $centers_temp = Center::with('users')->get();
+            $centers = Center::get();
+//            for($i = 0; $i < count($centers_temp); $i++){
+//                $users = $centers_temp[$i]->users;
+//                foreach ($users as $user) {
+//                    if ($user->role_number == 1) {
+//                        $centers[$i]->localCoordinator = $user;
+//                    } elseif ($user->role_number == 2) {
+//                        $centers[$i]->financialManagement = $user;
+//                    }
+//                }
+//            }
 
-            return $this->returnData('centers',$centers,'Get the all Centers successfully');
-
-        }
+            return $this->returnData('centers', $centers, 'Successfully retrieved all centers.');}
         catch (\Throwable $th) {
             return $this->returnError('Failed Get the all Centers. Try again after some time');
         }
@@ -135,6 +157,7 @@ class CenterController extends Controller
         if(!$center){
             return $this->returnError('Failed to get centers. the centers does not exist',404);
         }
+
 
         return $this->returnData('center',$center,'Get the centers successfully');
 
@@ -155,6 +178,52 @@ class CenterController extends Controller
         }
         return $this->returnData('projects',$projects,'Get the Projects successfully');
 
+    }
+    public function getLocalsCenter(Request $request){
+        $id = $request->center_id;
+        $centers=Center::find($id);
+        if(!$centers){
+            return $this->returnError('Failed to get centers. the centers does not exist',404);
+        }
+
+        $centers = Center::with(['users' => function ($query) {
+            $query->where('role_number', 1);
+        }])->find($id);
+
+        $locals = $centers->users;
+
+        return $this->returnData('locals',$locals,'Get the locals successfully');
+    }
+    public function getFinancialsCenter(Request $request){
+        $id = $request->center_id;
+        $centers=Center::find($id);
+        if(!$centers){
+            return $this->returnError('Failed to get centers. the centers does not exist',404);
+        }
+
+        $centers = Center::with(['users' => function ($query) {
+            $query->where('role_number', 2);
+        }])->find($id);
+
+        $locals = $centers->users;
+
+        return $this->returnData('financials',$locals,'Get the financials successfully');
+    }
+
+    public function getEmployeesCenter(Request $request){
+        $id = $request->center_id;
+        $centers=Center::find($id);
+        if(!$centers){
+            return $this->returnError('Failed to get centers. the centers does not exist',404);
+        }
+
+        $centers = Center::with(['users' => function ($query) {
+            $query->where('role_number', 3);
+        }])->find($id);
+
+        $locals = $centers->users;
+
+        return $this->returnData('employees',$locals,'Get the Employees successfully');
     }
 }
 
