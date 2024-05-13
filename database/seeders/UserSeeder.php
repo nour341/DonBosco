@@ -25,6 +25,8 @@ class UserSeeder extends Seeder
                 'password' => Hash::make(12345678),
                 'role_number' => 0,
                 'gender' => 'male',
+                'center_id' => null,
+
             ],
             [
                 'id' => 2,
@@ -60,6 +62,8 @@ class UserSeeder extends Seeder
                 'password' => Hash::make(12345678),
                 'role_number' => 4,
                 'gender' => 'male',
+                'center_id' => null,
+
             ],
 
         ];
