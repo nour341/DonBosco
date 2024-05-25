@@ -29,7 +29,7 @@ class CenterController extends Controller
 
         try {
 
-            $image_path = $this->saveImage($request->image_path, 'images/Center');
+            $image_path = $this->saveFile($request->image_path, 'images/Center');
 
             $Center = Center::create([
                 'name' => $request->name,
@@ -79,9 +79,9 @@ class CenterController extends Controller
 
             if ($request->has('image_path')) {
                 // delete old image
-                $this->deletImage($center->image_path);
+                $this->removeFile($center->image_path);
                 // save new image
-                $image_path = $this->saveImage($request->image_path, 'images/Center');
+                $image_path = $this->saveFile($request->image_path, 'images/Center');
                 $center->update([
                     'image_path' => $image_path,
                 ]);
@@ -118,7 +118,7 @@ class CenterController extends Controller
                 return $this->returnError('Failed to deleted the center does not exist',404);
             }
 
-            $this->deletImage($center->image_path);
+            $this->removeFile($center->image_path);
             $center->delete();
 
             return $this->returnSuccess("Center deleted Successfully");
@@ -131,19 +131,7 @@ class CenterController extends Controller
     public function getCenters(){
 
         try {
-//            $centers_temp = Center::with('users')->get();
             $centers = Center::get();
-//            for($i = 0; $i < count($centers_temp); $i++){
-//                $users = $centers_temp[$i]->users;
-//                foreach ($users as $user) {
-//                    if ($user->role_number == 1) {
-//                        $centers[$i]->localCoordinator = $user;
-//                    } elseif ($user->role_number == 2) {
-//                        $centers[$i]->financialManagement = $user;
-//                    }
-//                }
-//            }
-
             return $this->returnData('centers', $centers, 'Successfully retrieved all centers.');}
         catch (\Throwable $th) {
             return $this->returnError('Failed Get the all Centers. Try again after some time');
@@ -162,8 +150,6 @@ class CenterController extends Controller
         return $this->returnData('center',$center,'Get the centers successfully');
 
     }
-
-
 
     public function getProjectsCenter(Request $request){
         $id = $request->center_id;

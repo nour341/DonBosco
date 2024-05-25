@@ -1,5 +1,6 @@
 /node_modules
 /public/build
+/public/projectFolder
 /public/hot
 /public/images
 /public/storage

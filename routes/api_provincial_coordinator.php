@@ -3,10 +3,13 @@
 use App\Http\Controllers\ProvincialCoordinator\CenterController;
 use App\Http\Controllers\ProvincialCoordinator\CountryController;
 use App\Http\Controllers\ProvincialCoordinator\EmployController;
+use App\Http\Controllers\ProvincialCoordinator\FileSystemController;
+use App\Http\Controllers\ProvincialCoordinator\ItemController;
+use App\Http\Controllers\ProvincialCoordinator\StatusTaskController;
+use App\Http\Controllers\ProvincialCoordinator\TaskController;
 use App\Http\Controllers\ProvincialCoordinator\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FileSystemController;
 use App\Http\Controllers\ProvincialCoordinator\ProjectController;
 use App\Http\Controllers\ProvincialCoordinator\ReportController;
 
@@ -22,12 +25,9 @@ use App\Http\Controllers\ProvincialCoordinator\ReportController;
 |*/
 
 Route::group(["middleware"=>['auth:sanctum'],'type.provincial'],function()
-        {
-           // Route::post('get_information_of_user',[CoController::class,'get_information_of_user']);
-
-        });
-
-
+{
+    //
+});
 
 ############################ User ########################################
 Route::get('/getRole', [UserController::class, 'getRole']);
@@ -38,7 +38,6 @@ Route::post('getUsersByRole', [UserController::class, 'getUsersByRole']);
 Route::post('getAllUsers', [UserController::class, 'getAllUsers']);
 ############################ END ########################################
 
-
 ############################ Country ########################################
 Route::post('/createCountry', [CountryController::class, 'createCountry']);
 Route::post('/updateCountry', [CountryController::class, 'updateCountry']);
@@ -48,7 +47,6 @@ Route::post('/getCountry', [CountryController::class, 'getCountry']);
 Route::post('/getProjectsCountry', [CountryController::class, 'getProjectsCountry']);
 Route::post('/getCentersCountry', [CountryController::class, 'getCentersCountry']);
 ############################ END ########################################
-
 
 ############################ Center ########################################
 Route::post('/createCenter', [CenterController::class, 'createCenter']);
@@ -62,17 +60,26 @@ Route::post('/getFinancialsCenter', [CenterController::class, 'getFinancialsCent
 Route::post('/getEmployeesCenter', [CenterController::class, 'getEmployeesCenter']);
 ############################ END ########################################
 
+########################### Folder ########################################
+Route::post('creatFolder', [FileSystemController::class, 'creatFolder']);
+Route::post('reNameFolder', [FileSystemController::class, 'reNameFolder']);
+Route::post('downloadFolderZip', [FileSystemController::class, 'downloadFolderZip']);
+Route::post('deleteFolder', [FileSystemController::class, 'deleteFolder']);
+Route::get('getMainFolderProjects', [FileSystemController::class, 'getMainFolderProjects']);
+Route::post('getChildrenFolder', [FileSystemController::class, 'getChildrenFolder']);
+Route::post('moveFolder', [FileSystemController::class, 'moveFolder']);
+Route::post('copyFolder', [FileSystemController::class, 'copyFolder']);
+############################ END ########################################
 
-############################ Folder ########################################
-Route::post('AddFolder', [FileSystemController::class, 'AddFolder']);
-Route::post('ShowFolder/{id}', [FileSystemController::class, 'ShowFolder']);
-Route::post('getProjectFolders/{id}', [FileSystemController::class, 'getProjectFolders']);
 
-
-############################ Report ########################################
-Route::post('AddReport', [ReportController::class, 'AddReport']);
-Route::post('ShowReports', [ReportController::class, 'ShowReports']);
-Route::post('getFolderReports', [ReportController::class, 'getFolderReports']);
+########################### File ########################################
+Route::post('addFile', [FileSystemController::class, 'addFile']);
+Route::post('reNameFile', [FileSystemController::class, 'reNameFile']);
+Route::post('downloadFile', [FileSystemController::class, 'downloadFile']);
+Route::post('deleteFile', [FileSystemController::class, 'deleteFile']);
+Route::post('copyFile', [FileSystemController::class, 'copyFile']);
+Route::post('moveFile', [FileSystemController::class, 'moveFile']);
+############################ END ########################################
 
 
 ############################ Project ########################################
@@ -81,21 +88,54 @@ Route::post('/updateProject', [ProjectController::class, 'updateProject']);
 Route::post('/changeStatusProject', [ProjectController::class, 'changeStatusProject']);
 Route::get('getProjects', [ProjectController::class, 'getProjects']);
 Route::post('getProject', [ProjectController::class, 'getProject']);
-Route::post('getBudget', [ProjectController::class, 'getBudget']);
 
-//////////////////////////////////////////////////////////////////////
+#------------------------- Employ ------------------------------------
+Route::post('addEmployeeToProject', [EmployController::class, 'addEmployeeToProject']);
+Route::post('removeEmployeeFromProject', [EmployController::class, 'removeEmployeeFromProject']);
+Route::post('get_team_project', [EmployController::class, 'getEmployeesProject']);
+############################ END ########################################
+
+
+############################ Budget #####################################
+Route::post('project/getBudget', [ProjectController::class, 'getBudgetProject']);
+Route::post('project/addItemBudget', [ProjectController::class, 'addItemBudget']);
+Route::post('project/updateItemBudget', [ProjectController::class, 'updateItemBudget']);
+Route::post('project/deleteItemBudget', [ProjectController::class, 'deleteItemBudget']);
+############################ END ########################################
+
+
+########################### Item ########################################
+Route::post('Item/create', [ItemController::class, 'create']);
+Route::post('Item/update', [ItemController::class, 'update']);
+Route::post('Item/delete', [ItemController::class, 'delete']);
+Route::get('Item/get', [ItemController::class, 'getItems']);
+Route::post('Item/getItem', [ItemController::class, 'getItem']);
+############################ END ########################################
+
+
+############################ Task #######################################
+Route::post('task/add', [TaskController::class, 'add_task']);
+Route::post('task/update', [TaskController::class, 'update_task']);
+Route::post('task/changeTaskStatus', [TaskController::class, 'change_task_status']);
+Route::post('task/delete', [TaskController::class, 'deleteTask']);
+Route::post('task/getTasksProject', [TaskController::class, 'getTasksProject']);
+
+#------------------------- statusTask ------------------------------------
+Route::post('statusTask/create', [StatusTaskController::class, 'create']);
+Route::post('statusTask/update', [StatusTaskController::class, 'update']);
+Route::post('statusTask/delete', [StatusTaskController::class, 'delete']);
+Route::get('statusTask/getStatusTask', [StatusTaskController::class, 'getStatusTask']);
+############################ END ########################################
 
 
 
-############################ Project wissam ########################################
+############################ Report ########################################
+Route::post('AddReport', [ReportController::class, 'AddReport']);
+Route::post('ShowReports', [ReportController::class, 'ShowReports']);
+Route::post('getFolderReports', [ReportController::class, 'getFolderReports']);
 
 
-Route::post('add_team_project', [EmployController::class, 'add_team_project']);
-Route::post('get_team_project', [EmployController::class, 'get_team_project']);
-Route::post('get_workflow_plan', [EmployController::class, 'get_workflow_plan']);
-Route::post('confirm_task', [EmployController::class, 'confirm_task']);
-Route::post('add_task', [EmployController::class, 'add_task']);
-Route::post('git_project_financier', [EmployController::class, 'git_project_financier']);
+
 
 
 

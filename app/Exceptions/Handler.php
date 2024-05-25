@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Exceptions;
-
+use App\Traits\GeneralTrait;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
 class Handler extends ExceptionHandler
-{
+{use GeneralTrait;
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -47,4 +48,13 @@ class Handler extends ExceptionHandler
             //
         });
     }
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()){
+            return $this->returnError('Token is expired');
+        }
+
+        return parent::render($request, $exception);
+    }
+
 }
