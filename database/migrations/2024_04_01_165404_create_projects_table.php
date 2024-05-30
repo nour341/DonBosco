@@ -24,6 +24,8 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->unsignedBigInteger('center_id');
             $table->boolean('status')->default(false);
+            $table->float('total');
+            $table->float('balance')->default(0);
             $table->foreign('center_id')->references('id')->on('centers')->onDelete('cascade');
             $table->timestamps();
         });
