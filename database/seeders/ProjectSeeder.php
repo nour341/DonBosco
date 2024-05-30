@@ -29,7 +29,10 @@ class ProjectSeeder extends Seeder
                 "short_description"=> "is project 1",
                 "start_date"=> "2024-04-01",
                 "end_date"=> "2024-04-04",
-                "center_id"=> 1
+                "center_id"=> 1,
+                "total"=> 1000,
+                "balance"=> 1000,
+
             ],
             [
                 "id"=> 2,
@@ -40,7 +43,9 @@ class ProjectSeeder extends Seeder
                 "short_description"=> "is ndjd",
                 "start_date"=> "2024-04-01",
                 "end_date"=> "2024-04-04",
-                "center_id"=> 1
+                "center_id"=> 1,
+                "total"=> 10000,
+                "balance"=> 10000,
             ]
         ];
         Project::insert($projects);

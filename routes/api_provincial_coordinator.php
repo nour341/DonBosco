@@ -99,8 +99,11 @@ Route::post('get_team_project', [EmployController::class, 'getEmployeesProject']
 ############################ Budget #####################################
 Route::post('project/getBudget', [ProjectController::class, 'getBudgetProject']);
 Route::post('project/addItemBudget', [ProjectController::class, 'addItemBudget']);
+Route::post('project/addBudget', [ProjectController::class, 'addBudget']);
 Route::post('project/updateItemBudget', [ProjectController::class, 'updateItemBudget']);
+Route::post('project/updateBudget', [ProjectController::class, 'updateBudget']);
 Route::post('project/deleteItemBudget', [ProjectController::class, 'deleteItemBudget']);
+Route::post('project/deleteListBudget', [ProjectController::class, 'deleteListBudget']);
 ############################ END ########################################
 
 

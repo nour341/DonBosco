@@ -19,11 +19,7 @@ class Item extends Model
         'updated_at',
     ];
 
-    public function budgets()
-    {
-        return $this->belongsToMany(Budget::class, ItemBudget::class,
-            'item_id','budget_id',  'id', 'id');
-    }
+
 
     public function invoices()
     {
