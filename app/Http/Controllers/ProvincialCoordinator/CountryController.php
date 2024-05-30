@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ProvincialCoordinator;
 
 use App\Http\Controllers\Controller;
 use App\Models\Country;
+use App\Models\User;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -143,6 +144,9 @@ class CountryController extends Controller
         $projects = $centers->pluck('projects')->flatten();
         foreach ($projects as $project) {
             $project->status = $project->getStatus();
+            $project->local_coordinator = User::find($project->local_coordinator_id);
+            $project->financial_management = User::find($project->financial_management_id);
+            $project->supplier = User::find($project->supplier_id);
         }
         return $this->returnData('projects',$projects,'Get the Projects successfully');
 
