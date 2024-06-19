@@ -297,6 +297,7 @@ class ProjectController extends Controller
             return $this->returnError('Failed to create the Budgets. Try again after some time');
         }
     }
+
     public function updateBudget(Request $request)
     {
         $items = $request->all(); // الحصول على كافة العناصر من الطلب

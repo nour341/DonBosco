@@ -38,15 +38,19 @@ class User extends Authenticatable
         'updated_at',
         'email_verified_at',
     ];
-    public function projects()
-       {
-           return $this->belongsToMany(Project::class);
-       }
+
 
     public function center()
     {
         return $this->belongsTo(Center::class,'center_id','id');
     }
+    public function projects()
+       {
+           return $this->belongsToMany(Project::class, ProjectUser::class,
+               'user_id', 'project_id', 'id', 'id');
+       }
+
+
     public function actions()
     {
         return $this->hasMany(ActionFileSystem::class,'user_id');

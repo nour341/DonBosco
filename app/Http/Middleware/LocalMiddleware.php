@@ -2,11 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Traits\GeneralTrait;
 use Closure;
 use Illuminate\Http\Request;
 
 class LocalMiddleware
-{
+{ use  GeneralTrait;
     /**
      * Handle an incoming request.
      *
@@ -19,6 +20,8 @@ class LocalMiddleware
         if (auth()->user()->tokenCan('role:local')) {
             return $next($request);
         }
-        return response()->json('Not Authorized', 401);
+
+        return $this->returnError('Not Authorized local') ;
+
     }
 }

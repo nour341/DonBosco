@@ -53,12 +53,8 @@ To get started with the project, follow these steps:
 4. Seed the database with initial data:
 
    ```bash
-   php artisan db:seed --class=CountrySeeder
-   php artisan db:seed --class=UserSeeder
-   php artisan db:seed --class=CenterSeeder
-   php artisan db:seed --class=ProjectSeeder
-   php artisan db:seed --class=ItemSeeder 
-   php artisan db:seed --class=TaskSeeder 
+      php artisan db:seed
+
    ```
 
 5. run server:
@@ -92,7 +88,7 @@ password = 12345678
 
 **Employ Account:**
 ```angular2html
-email = employ@gmail.com
+email = soso@gmail.com
 password = 12345678
 ```
 

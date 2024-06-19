@@ -46,9 +46,6 @@ class CenterController extends Controller
         }
     }
 
-
-
-
     public function updateCenter(Request $request)
     {
         //Validated

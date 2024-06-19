@@ -56,8 +56,7 @@ class UserController extends Controller
                 ]);
 
             if($validate->fails()){
-                $errors = [ 'errorsValidator' => $validate->errors()];
-                return $this->returnErrorValidate($errors);
+                return $this->returnErrorValidate($validate->errors());
 
             }
 
@@ -90,8 +89,7 @@ class UserController extends Controller
                 ]);
 
             if($validate->fails()){
-                $errors = [ 'errorsValidator' => $validate->errors()];
-                return $this->returnErrorValidate($errors);
+                return $this->returnErrorValidate($validate->errors());
 
             }
             $user=User::find($request->id);
@@ -122,15 +120,34 @@ class UserController extends Controller
             ]);
 
         if($validate->fails()){
-            $errors = [ 'errorsValidator' => $validate->errors()];
-            return $this->returnErrorValidate($errors);
+            return $this->returnErrorValidate($validate->errors());
 
         }
         try {
 
+            $users = User::where('role_number', $request->role_number)->with('center')->get();
+            $users->each(function ($user) {
+                if ($user->role_number == 3) {
+                    $user->user_role = 'Employ';
 
-            $users = User::where('role_number', $request->role_number)->get();
+                }
+                elseif ($user->role_number == 2) {
+                    $user->user_role = 'Financial Management';
 
+                }
+                elseif ( $user->role_number == 1) {
+                    $user->user_role = 'Local Coordinator';
+
+                } elseif ( $user->role_number == 0 ) {
+                    $user->user_role = 'Provincial Coordinator';
+
+                }
+                if ($user->center)
+                    $user->center_name = $user->center->name;
+                else
+                    $user->center_name = 'unknown center';
+                unset($user->center); // Remove center to clean up the response
+            });
 
             return $this->returnData('users',$users,"get Users  Successfully");
 
@@ -146,7 +163,29 @@ class UserController extends Controller
 
         try {
 
-            $users = User::get();
+            $users = User::with('center')->get();
+            $users->each(function ($user) {
+                if ($user->role_number == 3) {
+                    $user->user_role = 'Employ';
+
+                }
+                elseif ($user->role_number == 2) {
+                    $user->user_role = 'Financial Management';
+
+                }
+                elseif ( $user->role_number == 1) {
+                    $user->user_role = 'Local Coordinator';
+
+                } elseif ( $user->role_number == 0 ) {
+                    $user->user_role = 'Provincial Coordinator';
+
+                }
+                if ($user->center)
+                    $user->center_name = $user->center->name;
+                else
+                    $user->center_name = 'unknown center';
+                unset($user->center); // Remove center to clean up the response
+            });
             return $this->returnData('users',$users,"get Users  Successfully");
 
         } catch (\Throwable $th) {
@@ -174,13 +213,12 @@ class UserController extends Controller
 
             $user->delete();
 
-            return $this->returnSuccess("Country deleted Successfully");
+            return $this->returnSuccess("User deleted Successfully");
 
         } catch (\Throwable $th) {
             return $this->returnError('Failed to deleted the user. Try again after some time');
         }
     }
-
 
 
 }

@@ -46,6 +46,17 @@ class EmployController extends Controller
 
         }
 
+        # التاكد اذا كان مضاف مسبقا
+        $projectUser = ProjectUser::where('project_id', $req->project_id)
+            ->where('user_id', $req->user_id)
+            ->first();
+
+        if ($projectUser) {
+
+            return $this->returnError('Already added', 404);
+
+        }
+
         try {
 
             ProjectUser::create([
@@ -133,7 +144,17 @@ class EmployController extends Controller
         }
         // تأكد من استدعاء دالة get() للحصول على النتائج الفعلية للمستخدمين
         $users = $project->users()->get();
+        // Modify each user to include the role and center name
+        $users->each(function ($user) {
+            $user->user_role = 'Employ';
+            if ($user->center)
+            $user->center_name = $user->center->name;
+            else
+                $user->center_name = 'unknown center';
+            unset($user->center); // Remove center to clean up the response
+            unset($user->pivot); // Remove pivot to clean up the response
 
+        });
         return $this->returnData('employees',$users,'Get the Tasks successfully');
 
     }

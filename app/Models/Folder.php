@@ -12,6 +12,7 @@ class Folder extends Model
         'project_id',
         'father_folder_id',
         'name',
+        'user_id'
     ];
 
     public function project()

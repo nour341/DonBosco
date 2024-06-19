@@ -17,7 +17,7 @@ class CenterSeeder extends Seeder
     {
         $centers =  [
             [
-                "id"=> 1,
+            "id"=> 1,
             "name"=> "Jaramana",
             "address"=> "damascus",
             "image_path"=> "images/Center/1714725245.pexels-elti-meshau-107925-333850.jpg",

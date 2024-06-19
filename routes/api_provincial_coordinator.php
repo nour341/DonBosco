@@ -4,6 +4,7 @@ use App\Http\Controllers\ProvincialCoordinator\CenterController;
 use App\Http\Controllers\ProvincialCoordinator\CountryController;
 use App\Http\Controllers\ProvincialCoordinator\EmployController;
 use App\Http\Controllers\ProvincialCoordinator\FileSystemController;
+use App\Http\Controllers\ProvincialCoordinator\InvoiceController;
 use App\Http\Controllers\ProvincialCoordinator\ItemController;
 use App\Http\Controllers\ProvincialCoordinator\StatusTaskController;
 use App\Http\Controllers\ProvincialCoordinator\TaskController;
@@ -127,8 +128,25 @@ Route::post('task/getTasksProject', [TaskController::class, 'getTasksProject']);
 Route::post('statusTask/create', [StatusTaskController::class, 'create']);
 Route::post('statusTask/update', [StatusTaskController::class, 'update']);
 Route::post('statusTask/delete', [StatusTaskController::class, 'delete']);
-Route::get('statusTask/getStatusTask', [StatusTaskController::class, 'getStatusTask']);
 ############################ END ########################################
+
+
+############################ Invoice ########################################
+Route::post('invoice/addInvoice', [InvoiceController::class, 'addInvoice']);
+Route::post('invoice/confirmInvoice', [InvoiceController::class, 'confirmInvoice']);
+Route::post('invoice/cancelInvoice', [InvoiceController::class, 'cancelInvoice']);
+Route::get('invoice/getAllNewInvoice', [InvoiceController::class, 'getAllNewInvoice']);
+Route::get('invoice/getAllInvoiceCancelled', [InvoiceController::class, 'getAllInvoiceCancelled']);
+Route::get('invoice/getAllInvoiceConfirmed', [InvoiceController::class, 'getAllInvoiceConfirmed']);
+Route::post('invoice/getInvoiceNewByProjectID', [InvoiceController::class, 'getInvoiceNewByProjectID']);
+Route::post('invoice/getInvoiceCancelledByProjectID', [InvoiceController::class, 'getInvoiceCancelledByProjectID']);
+Route::post('invoice/getInvoiceConfirmedByProjectID', [InvoiceController::class, 'getInvoiceConfirmedByProjectID']);
+Route::post('invoice/getInvoiceNewByTaskID', [InvoiceController::class, 'getInvoiceNewByTaskID']);
+Route::post('invoice/getInvoiceCancelledByTaskID', [InvoiceController::class, 'getInvoiceCancelledByTaskID']);
+Route::post('invoice/getInvoiceConfirmedByTaskID', [InvoiceController::class, 'getInvoiceConfirmedByTaskID']);
+Route::post('invoice/getInvoiceConfirmedByDateRange', [InvoiceController::class, 'getInvoiceConfirmedByDateRange']);
+Route::post('invoice/getInvoiceConfirmedByProjectAndDateRange', [InvoiceController::class, 'getInvoiceConfirmedByProjectAndDateRange']);
+Route::post('invoice/getInvoiceMonthlyExpensesConfirmedByProjectID', [InvoiceController::class, 'getInvoiceMonthlyExpensesConfirmedByProjectID']);
 
 
 

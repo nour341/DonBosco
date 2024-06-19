@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\FinancialManagement\InvoiceController;
+use App\Http\Controllers\FinancialManagement\ReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -16,8 +18,13 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::group(["middleware"=>['auth:sanctum'],'type.local'],function()
+Route::group(["middleware"=>['auth:sanctum'],'type.financial'],function()
+{ Route::group(["prefix"=>'financial'],function()
 {
-    // Route::post('get_information_of_user',[CoController::class,'get_information_of_user']);
+    Route::post('/invoice/confirmInvoice',[InvoiceController::class,'confirmInvoice']);
+    Route::post('/invoice/cancelInvoice',[InvoiceController::class,'cancelInvoice']);
+    Route::post('/invoice/getInvoiceMonthlyExpensesConfirmedByProjectID',[ReportController::class,'getInvoiceMonthlyExpensesConfirmedByProjectID']);
 
+
+});
 });

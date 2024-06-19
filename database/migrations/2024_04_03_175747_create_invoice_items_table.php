@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id')->constrained('items')->cascadeOnDelete();
+            $table->foreignId('itemBudget_id')->constrained('item_budgets')->cascadeOnDelete();
             $table->foreignId('invoice_id')->constrained('invoices')->cascadeOnDelete();
+            $table->string('name');
+            $table->string('unite');
             $table->float('unit_price');
             $table->integer('quantity');
             $table->float('total_price_quantity');

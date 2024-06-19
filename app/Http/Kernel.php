@@ -67,5 +67,10 @@ class Kernel extends HttpKernel
         'type.local' => \App\Http\Middleware\LocalMiddleware::class,
         'type.financial' => \App\Http\Middleware\FinancialMiddleware::class,
         'type.employ' => \App\Http\Middleware\EmployMiddleware::class,
+        'type.employ_or_financial_or_local' =>[
+            \App\Http\Middleware\EmployMiddleware::class,
+            \App\Http\Middleware\FinancialMiddleware::class,
+            \App\Http\Middleware\LocalMiddleware::class,
+        ]
     ];
 }

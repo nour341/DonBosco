@@ -13,6 +13,9 @@ class Task extends Model
     protected $table = 'tasks';
     protected $fillable = ['project_id','description','start_date','end_date','status_id','user_id'];
 
+
+
+
     public function project()
        {
            return $this->belongsTo(Project::class);

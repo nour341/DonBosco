@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\StatusTask;
+use App\Models\Task;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,46 +16,91 @@ class TaskSeeder extends Seeder
      */
     public function run()
     {
-        $statusTasks = [
+        $tasks = [
+            // مهام مشروع التدريب الطلابي
             [
-                "id" => 1,
-                "name" => "pending",
-                "short_description" => "Task is defined but work has not yet started",
+                'project_id' => 1,
+                'user_id' => 4, // المعلم 1
+                'description' => 'تدريس الرياضيات',
+                'start_date' => '2024-07-01',
+                'end_date' => '2024-07-31',
+                'status_id' => 1,
             ],
             [
-                "id" => 2,
-                "name" => "in_progress",
-                "short_description" => "Work on the task has started",
+                'project_id' => 1,
+                'user_id' => 5, // المعلم 2
+                'description' => 'تدريس العلوم',
+                'start_date' => '2024-07-01',
+                'end_date' => '2024-07-31',
+                'status_id' => 1,
             ],
             [
-                "id" => 3,
-                "name" => "on_hold",
-                "short_description" => "Work on the task is temporarily paused",
+                'project_id' => 1,
+                'user_id' => 6, // المعلم 3
+                'description' => 'تدريس التاريخ',
+                'start_date' => '2024-07-01',
+                'end_date' => '2024-07-31',
+                'status_id' => 1,
             ],
             [
-                "id" => 4,
-                "name" => "under_review",
-                "short_description" => "Task is completed and under review",
+                'project_id' => 1,
+                'user_id' => 7, // المعلم 4
+                'description' => 'تدريس الجغرافيا',
+                'start_date' => '2024-07-01',
+                'end_date' => '2024-07-31',
+                'status_id' => 1,
             ],
             [
-                "id" => 5,
-                "name" => "completed",
-                "short_description" => "Task is completed and approved",
+                'project_id' => 1,
+                'user_id' => 8, // المعلم 5
+                'description' => 'تدريس اللغة الإنجليزية',
+                'start_date' => '2024-07-01',
+                'end_date' => '2024-07-31',
+                'status_id' => 1,
+            ],
+
+            // مهام مشروع توزيع المساعدات
+            [
+                'project_id' => 2,
+                'user_id' => 10, // موظف
+                'description' => 'تنظيم توزيع الطعام',
+                'start_date' => '2024-07-01',
+                'end_date' => '2024-07-31',
+                'status_id' => 1,
             ],
             [
-                "id" => 6,
-                "name" => "closed",
-                "short_description" => "Task is completed and no further action is needed",
+                'project_id' => 2,
+                'user_id' => 10, // موظف
+                'description' => 'تنظيم توزيع المعدات',
+                'start_date' => '2024-07-01',
+                'end_date' => '2024-07-31',
+                'status_id' => 1,
             ],
             [
-                "id" => 7,
-                "name" => "cancelled",
-                "short_description" => "Task is cancelled and will not be completed",
-            ]
+                'project_id' => 2,
+                'user_id' => 10, // موظف
+                'description' => 'تنظيم توزيع الأجور',
+                'start_date' => '2024-07-01',
+                'end_date' => '2024-07-31',
+                'status_id' => 1,
+            ],
+            [
+                'project_id' => 2,
+                'user_id' => 2, // المنسق المحلي
+                'description' => 'الإشراف على المتطوعين',
+                'start_date' => '2024-07-01',
+                'end_date' => '2024-07-31',
+                'status_id' => 1,
+            ],
+            [
+                'project_id' => 2,
+                'user_id' => 10, // موظف
+                'description' => 'التواصل مع المستفيدين',
+                'start_date' => '2024-07-01',
+                'end_date' => '2024-07-31',
+                'status_id' => 1,
+            ],
         ];
-        StatusTask::insert($statusTasks);
-
-
-
+        Task::insert($tasks);
     }
 }

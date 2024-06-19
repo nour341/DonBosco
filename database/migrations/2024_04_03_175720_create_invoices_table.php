@@ -16,13 +16,13 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
-            $table->integer('image_id');
+            $table->integer('image_id')->nullable();
             $table->integer('number');
             $table->string('from');
             $table->string('to');
-            $table->date('date');
-            $table->float('total_price');
-            $table->boolean('status');
+            $table->date('date')->nullable();
+            $table->float('total_price')->default(0);
+            $table->boolean('status')->nullable();
             $table->timestamps();
         });
     }

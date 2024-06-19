@@ -31,6 +31,11 @@ class FileSystemController extends Controller
 
         }
 
+        // Check if the father folder belongs to the same project
+        $fatherFolder = Folder::find($request->father_folder_id);
+        if ($fatherFolder && $fatherFolder->project_id != $request->project_id) {
+            return $this->returnError('The father folder does not belong to the specified project', 400);
+        }
 
         // Check if the new Folder name already exists
         $existingFolder = Folder::where('name', $request->name)
@@ -87,6 +92,7 @@ class FileSystemController extends Controller
         $validate = Validator::make($request->all(),
             [
                 'name' => 'required',
+                'id' => 'required',
             ]);
         if($validate->fails()){
             return $this->returnErrorValidate($validate->errors());
@@ -213,6 +219,17 @@ class FileSystemController extends Controller
             // get folders and files
             $folders = $folder->childrenFolders()->get();
             $files = $folder->files()->get();
+
+            $files->each(function($file) {
+                // get path father File
+                $father_File_path = '';
+                $father_File = Folder::find($file->folder_id);
+                if ($father_File) {
+                    $father_File_path = $father_File->getPath();
+                }
+                $file_path = 'projectFolder/' . $father_File_path . '/' . $file->name;
+                $file->path  =$file_path;
+            });
             $children = [
                    'folders'=>$folders,
                    'files'=>$files,

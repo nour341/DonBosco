@@ -31,8 +31,15 @@ class ItemBudget extends Model
     {
         return $this->belongsTo(Project::class,'project_id');
     }
+    public function invoices()
+    {
+        return $this->belongsToMany(Invoice::class, InvoiceItem::class,
+            'itemBudget_id','invoice_id',  'id', 'id');
+    }
 
-
-
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }
 

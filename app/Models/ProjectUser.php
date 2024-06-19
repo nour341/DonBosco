@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectUser extends Model
 {
-    protected $table = 'project_user';
-    protected $fillable = ['project_id','user_id'];
-    public $timestamps = false;
     use HasFactory;
+    protected $table = 'project_user';
+    protected $fillable = ['id','project_id','user_id'];
+    public $timestamps = false;
 }

@@ -15,6 +15,7 @@ class File extends Model
         'description',
         'type',
         'name',
+        'user_id',
     ];
 
     public function folder()

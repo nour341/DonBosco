@@ -2,11 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Traits\GeneralTrait;
 use Closure;
 use Illuminate\Http\Request;
 
 class FinancialMiddleware
-{
+{ use GeneralTrait;
     /**
      * Handle an incoming request.
      *
@@ -19,6 +20,7 @@ class FinancialMiddleware
         if (auth()->user()->tokenCan('role:financial')) {
             return $next($request);
         }
-        return response()->json('Not Authorized', 401);
+        return $this->returnError('Not Authorized financial') ;
+
     }
 }
