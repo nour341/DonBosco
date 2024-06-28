@@ -24,8 +24,8 @@ class CountryController extends Controller
 
         if($validate->fails()){
             return $this->returnErrorValidate($validate->errors());
-
         }
+
         try {
             $country = Country::create([
                 'name' => $request->name,
@@ -45,6 +45,7 @@ class CountryController extends Controller
         //Validated
         $validate = Validator::make($request->all(),
             [
+                'id' => 'required',
                 'name' => 'required',
                 'code' => 'required',
                 'phoneCode' => 'required',
@@ -56,9 +57,11 @@ class CountryController extends Controller
         try {
 
             $country=Country::find($request->id);
+
             if(!$country){
                  return $this->returnError('Failed to updated the country does not exist',404);
             }
+
             // Check if the new Country name already exists
             $existingCountry = Country::where('name', $request->name)
                 ->where('id', '!=', $request->id)
@@ -91,6 +94,7 @@ class CountryController extends Controller
         if($validate->fails()){
             return $this->returnErrorValidate($validate->errors());
         }
+
         try {
 
             $country=Country::find($request->id);
@@ -108,7 +112,6 @@ class CountryController extends Controller
     }
 
     public function getCountries(){
-
         try {
             $countries=Country::get();
 
@@ -122,17 +125,18 @@ class CountryController extends Controller
     }
 
     public function getCountry(Request $request){
+
         $id = $request->country_id;
         $country=Country::find($id);
         if(!$country){
             return $this->returnError('Failed to get country. the country does not exist',404);
         }
-        $country=Country::find($id);
-
 
         return $this->returnData('country',$country,'Get the country successfully');
 
     }
+
+
     public function getProjectsCountry(Request $request){
         $id = $request->country_id;
         $country=Country::find($id);
@@ -142,6 +146,7 @@ class CountryController extends Controller
         $country=Country::with('centers')->find($id);
         $centers = $country->centers()->with('projects')->get();
         $projects = $centers->pluck('projects')->flatten();
+
         foreach ($projects as $project) {
             $project->status = $project->getStatus();
             $project->local_coordinator = User::find($project->local_coordinator_id);

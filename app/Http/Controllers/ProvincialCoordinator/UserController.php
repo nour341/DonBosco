@@ -78,6 +78,8 @@ class UserController extends Controller
 
         }
     }
+
+
     public function updateRolById(Request $request)
     {
         try {
@@ -92,6 +94,8 @@ class UserController extends Controller
                 return $this->returnErrorValidate($validate->errors());
 
             }
+
+
             $user=User::find($request->id);
             if(!$user){
                 return $this->returnError('Failed to updated the user does not exist',404);
@@ -126,6 +130,8 @@ class UserController extends Controller
         try {
 
             $users = User::where('role_number', $request->role_number)->with('center')->get();
+
+
             $users->each(function ($user) {
                 if ($user->role_number == 3) {
                     $user->user_role = 'Employ';

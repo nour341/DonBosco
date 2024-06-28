@@ -86,11 +86,11 @@ class ProjectController extends Controller
 
         }
         // Check if the new Project name already exists
-        $existingCenter = Project::where('name', $request->name)
+        $existingProject = Project::where('name', $request->name)
             ->where('id', '!=', $request->id)
             ->first();
 
-        if ($existingCenter) {
+        if ($existingProject) {
             return $this->returnError('The Project name already exists', 400);
         }
         try {
@@ -98,6 +98,7 @@ class ProjectController extends Controller
             if (!$project) {
                 return $this->returnError('Failed to updated the project does not exist', 404);
             }
+
             $expense = ($project->total - $project->balance);
             if ($expense > $request->total) {
                 return $this->returnError('Failed to updated  because the new budget is less than the expense', 404);
@@ -180,13 +181,13 @@ class ProjectController extends Controller
     {
         $id = $request->id;
         $project = Project::find($id);
+        if (!$project) {
+            return $this->returnError('Failed to get country. the Project does not exist', 404);
+        }
         $project->status = $project->getStatus();
         $project->local_coordinator = User::find($project->local_coordinator_id);
         $project->financial_management = User::find($project->financial_management_id);
         $project->supplier = User::find($project->supplier_id);
-        if (!$project) {
-            return $this->returnError('Failed to get country. the Project does not exist', 404);
-        }
 
         return $this->returnData('project', $project, 'Get the Projects successfully');
     }
@@ -211,6 +212,7 @@ class ProjectController extends Controller
 
         // استرجاع مجموع الميزانية المخصصة للمشروع
         $project = Project::find($request->project_id);
+
         if ($total_price > $project->balance) {
             return $this->returnError('The total price of items exceeds the project budget');
         }
@@ -323,6 +325,7 @@ class ProjectController extends Controller
             }
 
             $total_price = $item['quantity'] * $item['unit_price'];
+
             $totalSum += $total_price;
             if (isset($item['item_budget_id'])) {
                 // تحديث عنصر موجود
@@ -467,8 +470,6 @@ class ProjectController extends Controller
         if ($itemBudget->total_price != $itemBudget->balance) {
             return $this->returnError('The amount spent is greater than the budget specified for this item. Please increase the budget so that it is greater or equal ', 404);
         }
-
-
         // استرجاع مجموع الميزانية المخصصة للمشروع
         $project = Project::find($itemBudget->project_id);
 

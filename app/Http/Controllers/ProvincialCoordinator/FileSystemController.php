@@ -33,6 +33,7 @@ class FileSystemController extends Controller
 
         // Check if the father folder belongs to the same project
         $fatherFolder = Folder::find($request->father_folder_id);
+
         if ($fatherFolder && $fatherFolder->project_id != $request->project_id) {
             return $this->returnError('The father folder does not belong to the specified project', 400);
         }
@@ -41,6 +42,7 @@ class FileSystemController extends Controller
         $existingFolder = Folder::where('name', $request->name)
             ->where('father_folder_id', '==', $request->father_folder_id)
             ->first();
+
         if ($existingFolder) {
             return $this->returnError('The Folder name already exists', 400);
         }

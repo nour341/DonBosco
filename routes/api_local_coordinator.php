@@ -19,7 +19,7 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::group(["middleware"=>['auth:sanctum'],'type.financial'],function()
+Route::group(["middleware"=>['auth:sanctum'],'type.local'],function()
         {Route::group(["prefix"=>'local'],function()
         {
             Route::post('/createEmployee',[EmployController::class,'createEmployee']);

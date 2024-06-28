@@ -12,19 +12,14 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use ZipArchive;
 trait GeneralTrait
 {
-
-
-
     public function returnSuccess($msg = '',
                                   $code = 200)
     {
-
         return response()->json([
             'state'=>true,
             'message'=> $msg,
             'code'=> $code
         ]);
-
     }
 
 
@@ -46,6 +41,7 @@ trait GeneralTrait
         ]);
 
     }
+
     public function returnData($key,$value,$msg='',$code = 200){
 
         return response()->json([
@@ -55,6 +51,7 @@ trait GeneralTrait
             'code'=> $code,
         ]);
     }
+
     function renameFilePh($oldFilePath, $newFileName, $destinationPath): string
     {
         $fileExtension = pathinfo($oldFilePath, PATHINFO_EXTENSION);
@@ -74,6 +71,7 @@ trait GeneralTrait
 
         return $newFilePath;
     }
+
     function renameFolderPh($oldPath, $newPath)
     {
         if (is_dir($oldPath)) {
@@ -87,6 +85,7 @@ trait GeneralTrait
         // Folder does not exist
         return false;
     }
+
     function removeFolder($path): bool
     {
         if (is_dir($path)) {
@@ -113,6 +112,7 @@ trait GeneralTrait
         // Folder does not exist
         return false;
     }
+
     function createFolder($path): bool
     {
         if (!is_dir($path)) {
@@ -151,6 +151,7 @@ trait GeneralTrait
         $pathFileName = $destinationPath . "/" . $fullFileName;
         return $pathFileName;
     }
+
     function copyFilePh($sourcePath, $destinationPath): string
     {
         $fileExtension = pathinfo($sourcePath, PATHINFO_EXTENSION);
@@ -224,6 +225,8 @@ trait GeneralTrait
 
         return false;
     }
+
+
     private function copyDirectory($source, $destination)
     {
         if (!is_dir($destination)) {
@@ -247,6 +250,8 @@ trait GeneralTrait
 
         return true;
     }
+
+
     function getFileType($file): string
     {
         $file_extension = $file->getClientOriginalExtension();
