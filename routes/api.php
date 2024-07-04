@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProvincialCoordinator\StatusTaskController;
+use App\Http\Controllers\SharedCenterLevel\DashboardController;
 use App\Http\Controllers\SharedCenterLevel\FileSystemController;
 use App\Http\Controllers\SharedCenterLevel\InvoiceController;
 use App\Http\Controllers\SharedCenterLevel\ProjectController;
@@ -79,6 +80,8 @@ Route::prefix('center')->middleware(['auth:sanctum'])->group(function () {
     Route::post('invoice/getInvoiceConfirmedByTaskID', [InvoiceController::class, 'getInvoiceConfirmedByTaskID']);
 
 
+############################ dashboard ###############################
+    Route::get('getStats', [DashboardController::class, 'get_stats']);
 
 
 });

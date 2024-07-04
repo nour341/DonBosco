@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProvincialCoordinator\CenterController;
 use App\Http\Controllers\ProvincialCoordinator\CountryController;
+use App\Http\Controllers\ProvincialCoordinator\DashboardController;
 use App\Http\Controllers\ProvincialCoordinator\EmployController;
 use App\Http\Controllers\ProvincialCoordinator\FileSystemController;
 use App\Http\Controllers\ProvincialCoordinator\InvoiceController;
@@ -150,10 +151,8 @@ Route::post('invoice/getInvoiceMonthlyExpensesConfirmedByProjectID', [InvoiceCon
 
 
 
-############################ Report ########################################
-Route::post('AddReport', [ReportController::class, 'AddReport']);
-Route::post('ShowReports', [ReportController::class, 'ShowReports']);
-Route::post('getFolderReports', [ReportController::class, 'getFolderReports']);
+############################ dashboard ###############################
+Route::get('getStats', [DashboardController::class, 'get_stats']);
 
 
 
