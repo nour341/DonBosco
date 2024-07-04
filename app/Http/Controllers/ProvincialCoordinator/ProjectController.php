@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ProvincialCoordinator;
 use App\Helper\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateProjectRequest;
+use App\Models\Center;
 use App\Models\ItemBudget;
 use App\Models\Project;
 use App\Models\User;
@@ -168,6 +169,29 @@ class ProjectController extends Controller
                 $project->local_coordinator = User::find($project->local_coordinator_id);
                 $project->financial_management = User::find($project->financial_management_id);
                 $project->supplier = User::find($project->supplier_id);
+                // get employees in project
+                $users = $project->users()->get();
+                // Modify each user to include the role and center name
+                $users->each(function ($user) {
+                    $user->user_role = 'Employ';
+                    if ($user->center)
+                        $user->center_name = $user->center->name;
+                    else
+                        $user->center_name = 'unknown center';
+                    unset($user->center); // Remove center to clean up the response
+                    unset($user->pivot); // Remove pivot to clean up the response
+
+                });
+                $project->employees = $users;
+
+                //get Center in project
+                $project->center = Center::find($project->center_id);
+
+                //clean up the response
+                unset($project->center_id); // Remove center_id to clean up the response
+                unset($project->local_coordinator_id); // Remove local_coordinator_id to clean up the response
+                unset($project->financial_management_id); // Remove financial_management_id to clean up the response
+                unset($project->supplier_id); // Remove supplier_id to clean up the response
             }
 
             return $this->returnData('projects', $projects, 'Get the all projects successfully');
@@ -188,6 +212,30 @@ class ProjectController extends Controller
         $project->local_coordinator = User::find($project->local_coordinator_id);
         $project->financial_management = User::find($project->financial_management_id);
         $project->supplier = User::find($project->supplier_id);
+
+        // get employees in project
+        $users = $project->users()->get();
+        // Modify each user to include the role and center name
+        $users->each(function ($user) {
+            $user->user_role = 'Employ';
+            if ($user->center)
+                $user->center_name = $user->center->name;
+            else
+                $user->center_name = 'unknown center';
+            unset($user->center); // Remove center to clean up the response
+            unset($user->pivot); // Remove pivot to clean up the response
+
+        });
+        $project->employees = $users;
+
+        //get Center in project
+        $project->center = Center::find($project->center_id);
+
+        //clean up the response
+        unset($project->center_id); // Remove center_id to clean up the response
+        unset($project->local_coordinator_id); // Remove local_coordinator_id to clean up the response
+        unset($project->financial_management_id); // Remove financial_management_id to clean up the response
+        unset($project->supplier_id); // Remove supplier_id to clean up the response
 
         return $this->returnData('project', $project, 'Get the Projects successfully');
     }
